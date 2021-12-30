@@ -30,7 +30,6 @@ def add_table(db, tab_name):
 # add a new user to the reading database
 def add_user(collection, user_info):
     new_user = {
-        # need to add more information here
         "_id": user_info['id'],
         "name": user_info['name'],
         "family_size": user_info['size'],
@@ -55,3 +54,6 @@ def remove_user(collection, usr_id):
 
     collection.find_one_and_update({'_id': usr_id})
     return 1
+
+def remove_connection(client):
+    client.close()

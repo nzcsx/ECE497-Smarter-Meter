@@ -30,8 +30,10 @@ mycol = db["customers"]
 x = mycol.delete_many({})
 print(x.deleted_count, " documents deleted.")
 
+idd = 1
+
 mylist = [
-  { "_id": 1, "name": "John", "address": "Highway 37"},
+  { "_id": idd, "name": "John", "address": "Highway 37"},
   { "_id": 2, "name": "Peter", "address": "Lowstreet 27"},
   { "_id": 3, "name": "Amy", "address": "Apple st 652"},
   { "_id": 4, "name": "Hannah", "address": "Mountain 21"},
