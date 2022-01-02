@@ -1,11 +1,27 @@
 import pymongo
 from pymongo import MongoClient
 import pprint
+from datetime import datetime
 
 # Print all the entries in the current table
 def print_collection(collection):
     for doc in collection.find():
         pprint.pprint(doc)
+
+# Print the information of a specific user
+def print_user_info(collection, usr_id):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+    print("User name:", res['name'])
+    print("Family size:", res['family_size'])
+    res_p = res["readings"]
+    for key in res_p:
+        print("Reading at time:",datetime.strptime(res["datetime"][key], "%b-%d-%Y %H:%M:%S"),
+              " with reading: ",res_p[key], "W")
+    print("Appliance information:",res["appliance"])
 
 # Look for all power meter readings in the database
 def search_power_reading_all(collection, usr_id):
@@ -26,53 +42,57 @@ def search_power_reading_all(collection, usr_id):
 # Look for the power meter reading in a specific date duration
 # Needs to be updated to comparison in date format
 def search_power_reading_date(collection, usr_id, min_date, max_date):
+    min_d = datetime.strptime(min_date, "%b-%d-%Y %H:%M:%S")
+    max_d = datetime.strptime(max_date, "%b-%d-%Y %H:%M:%S")
+
+    if min_d > max_d:
+        print("Begin date larger than end date.")
+        return -1, -1
+
     if collection.count_documents({'_id': usr_id}) == 0:
         print("Unable to find the specified user")
-        return -1
+        return -1,-1
 
     power_readings, time, dates = [], [], []
 
     res = collection.find_one({'_id': usr_id})
-    res_d = res["dates"]
-    res_t = res["time"]
+    res_d = res["datetime"]
     res_p = res["readings"]
 
     for key in res_d:
-        if res_d[key] < min_date or res_d[key] > max_date:
+        curr_d = datetime.strptime(res_d[key], "%b-%d-%Y %H:%M:%S")
+        if curr_d < min_d or curr_d > max_d:
             continue
 
         power_readings.append(res_p[key])
-        time.append(res_t[key])
         dates.append(res_d[key])
 
-    return power_readings, time, dates
+    return power_readings, dates
 
-# Look for the power meter reading in a specific date and time duration
-# Needs to be updated to comparison in date and format
-def search_power_reading_date_time(collection, usr_id, min_date, max_date, min_time, max_time):
+def search_power_interval(collection, usr_id, min_power, max_power):
+    min_p = float(min_power)
+    max_p = float(max_power)
+
+    if min_p > max_p:
+        print("Begin date larger than end date.")
+        return -1, -1
+
     if collection.count_documents({'_id': usr_id}) == 0:
         print("Unable to find the specified user")
-        return -1
+        return -1,-1
 
     power_readings, time, dates = [], [], []
 
     res = collection.find_one({'_id': usr_id})
-    res_d = res["dates"]
-    res_t = res["time"]
+    res_d = res["datetime"]
     res_p = res["readings"]
 
     for key in res_d:
-        if res_d[key] < min_date or res_d[key] > max_date:
-            continue
-
-        if res_d[key] >= min_date and res_t[key] < min_time:
-            continue
-
-        if res_d[key] <= max_date and res_t[key] > max_time:
+        curr_p = float(res_p[key])
+        if curr_p < min_p or curr_p > max_p:
             continue
 
         power_readings.append(res_p[key])
-        time.append(res_t[key])
         dates.append(res_d[key])
 
-    return power_readings, time, dates
+    return power_readings, dates

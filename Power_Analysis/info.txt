@@ -23,3 +23,17 @@ def remove_user(collection, usr_id)
 def add_power_reading(collection, usr_id, readings, dates, time)
 def update_family_info(collection, usr_id, family)
 def update_appliance_info(collection, usr_id, appliance)
+
+--- db_search.py ---
+def print_collection(collection)
+def print_user_info(collection, usr_id)
+def search_power_reading_all(collection, usr_id)
+def search_power_reading_date(collection, usr_id, min_date, max_date)
+
+%b %d %Y %I:%M%p
+%b Month as locale’s abbreviated name(Jun)
+%d Day of the month as a zero-padded decimal number(1)
+%Y Year with century as a decimal number(2015)
+%I Hour (12-hour clock) as a zero-padded decimal number(01)
+%M Minute as a zero-padded decimal number(33)
+%p Locale’s equivalent of either AM or PM(PM)

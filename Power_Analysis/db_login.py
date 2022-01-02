@@ -1,6 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 import pprint
+from datetime import datetime
 
 # connect with the client host
 # setup a database with db_name and start a new table with tab_name
@@ -34,8 +35,8 @@ def add_user(collection, user_info):
         "name": user_info['name'],
         "family_size": user_info['size'],
         "readings": user_info['readings'], # readings should be in a dictionary form with {t_id: reading}
-        "dates": user_info['date'],  # date should be in a dictionary form with {t_id:date}
-        "time": user_info['time'], # time should be in a dictionary form with {t_id:time}
+        "datetime": user_info['date'],  # date should be in a dictionary form with {t_id:date}
+        #"time": user_info['time'], # time should be in a dictionary form with {t_id:time}
         "appliance": user_info['appliance']
     }
     collection.insert_one(new_user)
@@ -52,7 +53,7 @@ def remove_user(collection, usr_id):
         print("Unable to find the specified user")
         return -1
 
-    collection.find_one_and_update({'_id': usr_id})
+    collection.find_one_and_delete({'_id': usr_id})
     return 1
 
 def remove_connection(client):
