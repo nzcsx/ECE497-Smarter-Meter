@@ -1,0 +1,39 @@
+MacOS Catalina: Cannot use the MongoDB Community version 5.0
+brew tap mongodb/brew
+brew install mongodb-community@4.4
+
+extra installs:
+$ pip install pymongo==3.11.2
+$ pip install mongoengine==0.22.1
+
+added functions:
+
+--- db_login.py ---
+# connect with the client host
+# setup a database with db_name and start a new table with tab_name
+def connect_host(db_name, tab_name)
+def add_db(client, db_name) # setup a new database with db_name
+def add_table(db, tab_name)
+def add_user(collection, user_info)
+
+def remove_collection(collection)
+def remove_user(collection, usr_id)
+
+--- db_update.py ---
+def add_power_reading(collection, usr_id, readings, dates, time)
+def update_family_info(collection, usr_id, family)
+def update_appliance_info(collection, usr_id, appliance)
+
+--- db_search.py ---
+def print_collection(collection)
+def print_user_info(collection, usr_id)
+def search_power_reading_all(collection, usr_id)
+def search_power_reading_date(collection, usr_id, min_date, max_date)
+
+%b %d %Y %I:%M%p
+%b Month as locale’s abbreviated name(Jun)
+%d Day of the month as a zero-padded decimal number(1)
+%Y Year with century as a decimal number(2015)
+%I Hour (12-hour clock) as a zero-padded decimal number(01)
+%M Minute as a zero-padded decimal number(33)
+%p Locale’s equivalent of either AM or PM(PM)
