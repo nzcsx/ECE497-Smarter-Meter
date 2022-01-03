@@ -2,6 +2,7 @@ import sys
 sys.path.append('/home/pi/ECE496_CAPSTONE')
 
 import os, time, pydrive
+import RPi.GPIO as GPIO
 from time import sleep
 from picamera import PiCamera
 from pydrive.auth import GoogleAuth
@@ -19,6 +20,10 @@ gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(18,GPIO.OUT)
+
 # count #files
     #path, dirs, files = next(os.walk(dir_local))
     #pics_count = len(files)
@@ -30,7 +35,9 @@ while flag:
     for i in range(max_num_pics):
         sleep(time_interval)
         filename_local = time.strftime('%Y_%m_%d-%H_%M_%S') + '.jpg'
+        GPIO.output(18,GPIO.HIGH)
         camera.capture(os.path.join(dir_local, filename_local))
+        GPIO.output(18,GPIO.LOW)
         
     # upload these photo to google drive
     filenames_local = os.listdir(dir_local)
