@@ -53,3 +53,22 @@ def update_appliance_info(collection, usr_id, appliance):
     curr.update(appliance)
     collection.find_one_and_update({'_id': usr_id}, {'$set': {'appliance':curr}})
     return 1
+
+# update password
+def update_password(collection, usr_id, pwd):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    collection.find_one_and_update({'_id': usr_id}, {'$set': {'password':pwd}})
+    return 1
+
+# update the last login time
+def update_last_login(collection, usr_id):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    collection.find_one_and_update({'_id': usr_id},
+                                   {'$set': {"last_login_date": datetime.now().strftime("%b-%d-%Y %H:%M:%S")}})
+    return 1

@@ -6,34 +6,131 @@ extra installs:
 $ pip install pymongo==3.11.2
 $ pip install mongoengine==0.22.1
 
-added functions:
+Brief Introduction:
+The current versions of the functions are written in separate files.
+They can be aggregated into one file after all are tested. (see database.py)
 
---- db_login.py ---
-# connect with the client host
-# setup a database with db_name and start a new table with tab_name
+-------------- Database entries --------------
+id: a unique id for identifying the user
+name: the name of the user specified during registration
+family_size: how many people are there in the family?
+readings: power meter readings with a time_id as the key for research
+datetime: the time and date the corresponding power meter reading with the same time_id is recorded (format: %b-%d-%Y %H:%M:%S)
+appliance: household appliance information for spatial estimation
+password:
+    Should have at least one number.
+    Should have at least one uppercase and one lowercase character.
+    Should have at least one special symbol (@$!%*#?&).
+    Should be between 5 to 15 characters long.
+reset_Q: question to be asked per password reset
+reset_A: answer to the question^
+last_login_date: last date and time the user logged in
+
+*** to do ***
+
+-------------- db_login.py --------------
 def connect_host(db_name, tab_name)
+- Create a database and a table with specified names.
+
 def add_db(client, db_name) # setup a new database with db_name
+- Add a new database in the given client host connection
+
 def add_table(db, tab_name)
+- Add a new table to the given database with specified names.
+
 def add_user(collection, user_info)
+- Add a new entry to the database, usually a new user.
+- Should check if the ids are replicated
 
 def remove_collection(collection)
+- Remove the whole table from database
+
 def remove_user(collection, usr_id)
+- Remove a specific user with his/her id.
 
---- db_update.py ---
+def check_pwd(collection, usr_id, pwd)
+- Check if the given password matches the one set in database
+
+def get_new_id(collection)
+- Assign a new id to the latest user.
+- to do: (could be reusable ids for future considerations)
+
+def get_id_by_name(collection, name)
+- Get the id of the user with specified name
+
+def get_reset_question(collection, usr_id)
+- Get the reset password question
+
+def reset_pwd(collection, usr_id, ans, new_pwd)
+- Check the answer to the reset question
+- Reset the password in the database
+
+def check_pwd_validity(passwd)
+- Check if the input password meets the requirement:
+    - Should have at least one number.
+    - Should have at least one uppercase and one lowercase character.
+    - Should have at least one special symbol (@$!%*#?&).
+    - Should be between 5 to 15 characters long.
+
+*** to do ***
+
+-------------- db_update.py --------------
 def add_power_reading(collection, usr_id, readings, dates, time)
-def update_family_info(collection, usr_id, family)
-def update_appliance_info(collection, usr_id, appliance)
+- Add new power meter readings to the present database
 
---- db_search.py ---
+def update_family_info(collection, usr_id, family)
+- Update the number of family members
+
+def update_appliance_info(collection, usr_id, appliance)
+- Update the household appliance information
+- Only need to specify the new appliances in the argument
+
+def update_password(collection, usr_id, pwd)
+- Update a password
+
+def update_last_login(collection, usr_id)
+- Update the last log in time of the user
+
+*** to do ***
+def check_reading()
+
+-------------- db_search.py --------------
 def print_collection(collection)
 def print_user_info(collection, usr_id)
-def search_power_reading_all(collection, usr_id)
-def search_power_reading_date(collection, usr_id, min_date, max_date)
 
-%b %d %Y %I:%M%p
+def search_power_reading_all(collection, usr_id)
+- return all power meter readings
+- return power_readings, dates in corresponding chronological orders
+
+def search_power_reading_date(collection, usr_id, min_date, max_date)
+- return the power meter readings during the given time interval
+- return power_readings, dates in corresponding chronological orders
+
+def search_last_update(collection, usr_id, return_string = True)
+- return the latest update datetime of the readings
+- can choose either as a string or a datetime return format
+
+*** to do ***
+
+-------------- analysis.py --------------
+def plot_temporal(collection, usr_id, min_date, max_date)
+- plot the power meter readings during the given time interval
+
+def plot_temporal_incremental(collection, usr_id, min_date, max_date)
+- plot the power meter reading increments during the given time interval
+
+*** to do ***
+def plot_spatial()
+def estimate_bill()
+def generate_warning()
+def how_you_should_use_your_electricity_wisely()
+
+-------------- Datetime format --------------
 %b Month as locale’s abbreviated name(Jun)
 %d Day of the month as a zero-padded decimal number(1)
 %Y Year with century as a decimal number(2015)
 %I Hour (12-hour clock) as a zero-padded decimal number(01)
+%H Hour (24-hour clock) as a zero-padded decimal number(19)
 %M Minute as a zero-padded decimal number(33)
+%S Seconds as a zero-padded decimal number(11)
 %p Locale’s equivalent of either AM or PM(PM)

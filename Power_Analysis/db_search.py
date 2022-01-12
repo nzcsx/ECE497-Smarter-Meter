@@ -96,3 +96,16 @@ def search_power_interval(collection, usr_id, min_power, max_power):
         dates.append(res_d[key])
 
     return power_readings, dates
+
+def search_last_update(collection, usr_id, return_string = True):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+    max_key = max(res["datetime"], key=res["datetime"].get)
+
+    if return_string:
+        return res["datetime"][max_key]
+    else:
+        return datetime.strptime(res["datetime"][max_key], "%b-%d-%Y %H:%M:%S")
