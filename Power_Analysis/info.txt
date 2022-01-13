@@ -10,6 +10,12 @@ Brief Introduction:
 The current versions of the functions are written in separate files.
 They can be aggregated into one file after all are tested. (see database.py)
 
+Notice:
+Please use string formatted datetime in all the arguments
+
+Issues:
+Need to update the functions for dictionaries to allow direct addition to the dictionary (fixed)
+
 -------------- Database entries --------------
 id: a unique id for identifying the user
 name: the name of the user specified during registration
@@ -98,13 +104,15 @@ def check_reading()
 def print_collection(collection)
 def print_user_info(collection, usr_id)
 
-def search_power_reading_all(collection, usr_id)
+def search_power_reading_all(collection, usr_id, return_string = True)
 - return all power meter readings
 - return power_readings, dates in corresponding chronological orders
+- can choose either as a string or a datetime return format
 
-def search_power_reading_date(collection, usr_id, min_date, max_date)
+def search_power_reading_date(collection, usr_id, min_date, max_date, return_string = True)
 - return the power meter readings during the given time interval
 - return power_readings, dates in corresponding chronological orders
+- can choose either as a string or a datetime return format
 
 def search_last_update(collection, usr_id, return_string = True)
 - return the latest update datetime of the readings
@@ -118,6 +126,33 @@ def plot_temporal(collection, usr_id, min_date, max_date)
 
 def plot_temporal_incremental(collection, usr_id, min_date, max_date)
 - plot the power meter reading increments during the given time interval
+
+def estimate_bill_month(collection, usr_id, month = None)
+def estimate_bill_period(collection, usr_id, min_date, max_date)
+- returns the bill class with specified bill payments by various factors
+- bill class contains:
+    usr_id: user id
+    min_date: start date of calculation
+    max_date: end date of calculation
+    power: power readings during the period
+    dates: recorded dates and time during the period
+
+    different prices:
+        price_off_peak
+        price_mid_peak
+        price_on_peak
+
+    Power spent at hours that belongs to:
+        off_peak
+        mid_peak
+        on_peak
+
+    power_calendar: power spent on each day over the period
+    power_calendar_divided: power spent on each day over the period divided into three categories by time
+    price_calendar: bill payment on each day over the period
+    price_calendar_divided: bill payment on each day over the period divided into three categories by time
+
+    total_bill: total estimated payment
 
 *** to do ***
 def plot_spatial()

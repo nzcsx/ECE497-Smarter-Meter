@@ -50,7 +50,11 @@ def update_appliance_info(collection, usr_id, appliance):
     res = collection.find_one({'_id': usr_id})
 
     curr = res["appliance"]
-    curr.update(appliance)
+    for app in appliance.keys():
+        if app in curr:
+            curr[app] += appliance[app]
+        else:
+            curr.update(appliance)
     collection.find_one_and_update({'_id': usr_id}, {'$set': {'appliance':curr}})
     return 1
 
