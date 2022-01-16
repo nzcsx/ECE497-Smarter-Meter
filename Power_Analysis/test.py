@@ -20,7 +20,10 @@ user_info = {
         "size": "3",
         "readings": {"1": "123"}, # readings should be in a dictionary form with {t_id: reading}
         "date": {"1": "Dec-29-2021 17:13:24"},  # date should be in a dictionary form with {t_id:date}
-        "appliance": {"fridge":3}
+        "appliance": {"fridge":3},
+        "password": "yes",
+        "reset_Q": "My name?",
+        "reset_A": "Default"
 }
 login.add_user(tab, user_info)
 search.print_collection(tab)
@@ -48,6 +51,7 @@ search.print_collection(tab)
 # test 3
 p,d = search.search_power_reading_date(tab, 1, min_date = 'Dec-29-2021 18:50:12', max_date = "Dec-31-2021 18:14:00")
 print(p,d)
+update.update_last_login(tab, 1)
 #anal.plot_temporal_incremental(tab, 1, min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-31-2022 20:14:00")
 
 # test 4
@@ -57,12 +61,15 @@ print(p,d)
 # test 5
 user_info = {
 # need to add more information here
-        "id": 2,
+        "id": login.get_new_id(tab),
         "name": "Someone",
         "size": "3",
         "readings": {"1": "123"}, # readings should be in a dictionary form with {t_id: reading}
         "date": {"1": "Dec-29-2021 19:20:21"},  # date should be in a dictionary form with {t_id:date}
-        "appliance": {"fridge":3}
+        "appliance": {"fridge":3},
+        "password": "yes",
+        "reset_Q": "My name?",
+        "reset_A": "Default"
 }
 login.add_user(tab, user_info)
 search.print_collection(tab)
@@ -72,6 +79,12 @@ login.remove_user(tab,2)
 search.print_collection(tab)
 
 search.print_user_info(tab,1)
+
+print(login.get_id_by_name(tab, 'Default'))
+login.reset_pwd(tab, 1, "Default", "No")
+update.update_last_login(tab, 1)
+print(search.search_last_update(tab, 1))
+search.print_collection(tab)
 
 login.remove_collection(tab)
 login.remove_connection(client)
