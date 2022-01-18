@@ -43,19 +43,23 @@ def update_family_info(collection, usr_id, family):
     return 1
 
 # update appliance information
-def update_appliance_info(collection, usr_id, appliance):
+def update_appliance_info(db, collection, usr_id, updated_info):
     if collection.count_documents({'_id': usr_id}) == 0:
         print("Unable to find the specified user")
         return -1
     res = collection.find_one({'_id': usr_id})
+    app_collection = db[res["appliance"]]
+    app_collection.delete_many({})
 
-    curr = res["appliance"]
-    for app in appliance.keys():
-        if app in curr:
-            curr[app] += appliance[app]
-        else:
-            curr.update(appliance)
-    collection.find_one_and_update({'_id': usr_id}, {'$set': {'appliance':curr}})
+    for idx, info in enumerate(updated_info):
+        new_appl = {
+            "_id": idx,
+            "appliance": info[0],
+            "wattage": str(info[1]),
+            "quantity": str(info[2]),
+            "usage_freq": info[3]
+        }
+        app_collection.insert_one(new_appl)
     return 1
 
 # update password

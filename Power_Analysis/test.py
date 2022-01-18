@@ -6,6 +6,8 @@ from datetime import datetime
 
 now = datetime.now()
 client, db, tab = login.connect_host("Power", "user_info")
+login.remove_collection(db["user_1"])
+login.remove_collection(db["user_2"])
 login.remove_collection(tab)
 
 # dd-mm-YY H:M:S
@@ -13,6 +15,8 @@ now = datetime.now()
 dt_string = now.strftime("%b-%d-%Y %H:%M:%S")
 print("date and time =", dt_string)
 
+# format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
+        # usage frequency choices: "all day", "often", "rare", "not in use"
 user_info = {
 # need to add more information here
         "id": 1,
@@ -20,16 +24,16 @@ user_info = {
         "size": "3",
         "readings": {"1": "123"}, # readings should be in a dictionary form with {t_id: reading}
         "date": {"1": "Dec-29-2021 17:13:24"},  # date should be in a dictionary form with {t_id:date}
-        "appliance": {"fridge":3},
+        "appliance": [["fridge", 362, 3, "often"]],
         "password": "yes",
         "reset_Q": "My name?",
         "reset_A": "Default"
 }
-login.add_user(tab, user_info)
+login.add_user(db, db["user_info"], user_info)
 search.print_collection(tab)
 
 # test 1
-update.update_appliance_info(tab,1,{"laptop":1})
+update.update_appliance_info(db, tab,1,[["fridge", 362, 3, "often"], ["laptop", 36, 1, "rare"]])
 search.print_collection(tab)
 
 # test 2
@@ -52,7 +56,7 @@ search.print_collection(tab)
 p,d = search.search_power_reading_date(tab, 1, min_date = 'Dec-29-2021 18:50:12', max_date = "Dec-31-2021 18:14:00")
 print(p,d)
 update.update_last_login(tab, 1)
-#anal.plot_temporal_incremental(tab, 1, min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-31-2022 20:14:00")
+anal.plot_temporal(tab, 1, min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-31-2022 20:14:00")
 
 # test 4
 p,d = search.search_power_interval(tab, 1, 120, 130)
@@ -66,19 +70,19 @@ user_info = {
         "size": "3",
         "readings": {"1": "123"}, # readings should be in a dictionary form with {t_id: reading}
         "date": {"1": "Dec-29-2021 19:20:21"},  # date should be in a dictionary form with {t_id:date}
-        "appliance": {"fridge":3},
+        "appliance": [["fridge", 362, 3, "often"]],
         "password": "yes",
         "reset_Q": "My name?",
         "reset_A": "Default"
 }
-login.add_user(tab, user_info)
+login.add_user(db, tab, user_info)
 search.print_collection(tab)
 
 print("after deletion")
-login.remove_user(tab,2)
+login.remove_user(db, tab,2)
 search.print_collection(tab)
 
-search.print_user_info(tab,1)
+search.print_user_info(db, tab,1)
 
 print(login.get_id_by_name(tab, 'Default'))
 login.reset_pwd(tab, 1, "Default", "No")
@@ -86,6 +90,7 @@ update.update_last_login(tab, 1)
 print(search.search_last_update(tab, 1))
 search.print_collection(tab)
 
+login.remove_user(db, tab,1)
 login.remove_collection(tab)
 login.remove_connection(client)
 

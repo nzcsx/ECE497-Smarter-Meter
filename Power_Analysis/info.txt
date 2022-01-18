@@ -1,3 +1,10 @@
+#######################################################################
+Created by Xuening Dong
+
+December 21st, 2021
+Last updated: January 17, 2022
+#######################################################################
+
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
 brew tap mongodb/brew
 brew install mongodb-community@4.4
@@ -12,6 +19,7 @@ They can be aggregated into one file after all are tested. (see database.py)
 
 Notice:
 Please use string formatted datetime in all the arguments
+For all inquiries related to appliance, need to specify the database name
 
 Issues:
 Need to update the functions for dictionaries to allow direct addition to the dictionary (fixed)
@@ -22,7 +30,12 @@ name: the name of the user specified during registration
 family_size: how many people are there in the family?
 readings: power meter readings with a time_id as the key for research
 datetime: the time and date the corresponding power meter reading with the same time_id is recorded (format: %b-%d-%Y %H:%M:%S)
-appliance: household appliance information for spatial estimation
+appliance:
+    - In user_info (input):
+        format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
+        usage frequency choices: "all day", "often", "rare", "not in use"
+    - Actually stored:
+        The name of the collection
 password:
     Should have at least one number.
     Should have at least one uppercase and one lowercase character.
@@ -44,14 +57,17 @@ def add_db(client, db_name) # setup a new database with db_name
 def add_table(db, tab_name)
 - Add a new table to the given database with specified names.
 
-def add_user(collection, user_info)
+def init_appliance(collection, app_info)
+- Initialize all the appliance information in the database
+
+def add_user(db, collection, user_info)
 - Add a new entry to the database, usually a new user.
 - Should check if the ids are replicated
 
 def remove_collection(collection)
 - Remove the whole table from database
 
-def remove_user(collection, usr_id)
+def remove_user(db, collection, usr_id)
 - Remove a specific user with his/her id.
 
 def check_pwd(collection, usr_id, pwd)
@@ -87,9 +103,10 @@ def add_power_reading(collection, usr_id, readings, dates, time)
 def update_family_info(collection, usr_id, family)
 - Update the number of family members
 
-def update_appliance_info(collection, usr_id, appliance)
+def update_appliance_info(db, collection, usr_id, updated_info)
 - Update the household appliance information
-- Only need to specify the new appliances in the argument
+- Need to specify all the appliance information in the database (as we will delete all the former information)
+- updated_info format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
 
 def update_password(collection, usr_id, pwd)
 - Update a password
@@ -102,7 +119,12 @@ def check_reading()
 
 -------------- db_search.py --------------
 def print_collection(collection)
-def print_user_info(collection, usr_id)
+def print_user_info(db, collection, usr_id)
+def print_appliance_info(db, collection, usr_id)
+
+def search_appliance_list(db, collection, usr_id)
+- Get all appliance infomation in an array
+- return format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
 
 def search_power_reading_all(collection, usr_id, return_string = True)
 - return all power meter readings
@@ -127,6 +149,7 @@ def plot_temporal(collection, usr_id, min_date, max_date)
 def plot_temporal_incremental(collection, usr_id, min_date, max_date)
 - plot the power meter reading increments during the given time interval
 
+--------------bill.py --------------
 def estimate_bill_month(collection, usr_id, month = None)
 def estimate_bill_period(collection, usr_id, min_date, max_date)
 - returns the bill class with specified bill payments by various factors
@@ -154,11 +177,20 @@ def estimate_bill_period(collection, usr_id, min_date, max_date)
 
     total_bill: total estimated payment
 
+-------------- spatial.py --------------
+
+
+*** to do ***
+-> need to change all the appliance information in the user_info database to be
+    the name of corresponding appliance list name, and fix the access to the appliance to be db['listname']
+-> create a database for all the existing appliance models
+
+
 *** to do ***
 def plot_spatial()
-def estimate_bill()
 def generate_warning()
 def how_you_should_use_your_electricity_wisely()
+bill payment estimations subject to the seasons
 
 -------------- Datetime format --------------
 %b Month as locale’s abbreviated name(Jun)

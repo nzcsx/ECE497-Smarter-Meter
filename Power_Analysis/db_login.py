@@ -29,8 +29,25 @@ def add_table(db, tab_name):
     collection = db[tab_name]
     return collection
 
+# format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
+# usage frequency choices: "all day", "often", "rare", "not in use"
+def init_appliance(collection, app_info):
+    for idx, info in enumerate(app_info):
+        new_appl = {
+            "_id": idx,
+            "appliance": info[0],
+            "wattage": str(info[1]),
+            "quantity": str(info[2]),
+            "usage_freq": info[3]
+        }
+        collection.insert_one(new_appl)
+
 # add a new user to the reading database
-def add_user(collection, user_info):
+def add_user(db, collection, user_info):
+    app_name = "user_" + str(user_info['id'])
+    app_collection = add_table(db, app_name)
+    init_appliance(collection=app_collection, app_info=user_info["appliance"])
+
     new_user = {
         "_id": user_info['id'],
         "name": user_info['name'],
@@ -38,7 +55,7 @@ def add_user(collection, user_info):
         "readings": user_info['readings'], # readings should be in a dictionary form with {t_id: reading}
         "datetime": user_info['date'],  # date should be in a dictionary form with {t_id:date}
         #"time": user_info['time'], # time should be in a dictionary form with {t_id:time}
-        "appliance": user_info['appliance'],
+        "appliance": app_name,
         "password": user_info['password'],
         "reset_Q": user_info['reset_Q'],
         "reset_A": user_info['reset_A'],
@@ -53,10 +70,14 @@ def remove_collection(collection):
     print(x.deleted_count, " documents deleted.")
 
 # remove a specific user from the table
-def remove_user(collection, usr_id):
+def remove_user(db, collection, usr_id):
     if collection.count_documents({'_id': usr_id}) == 0:
         print("Unable to find the specified user")
         return -1
+
+    res = collection.find_one({'_id': usr_id})
+    app_collection = db[res["appliance"]]
+    app_collection.delete_many({})
 
     collection.find_one_and_delete({'_id': usr_id})
     return 1
