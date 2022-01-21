@@ -2,7 +2,7 @@
 Created by Xuening Dong
 
 December 21st, 2021
-Last updated: January 17, 2022
+Last updated: January 20, 2022
 #######################################################################
 
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
@@ -12,6 +12,7 @@ brew install mongodb-community@4.4
 extra installs:
 $ pip install pymongo==3.11.2
 $ pip install mongoengine==0.22.1
+$ pip install sympy
 
 Brief Introduction:
 The current versions of the functions are written in separate files.
@@ -178,7 +179,12 @@ def estimate_bill_period(collection, usr_id, min_date, max_date)
     total_bill: total estimated payment
 
 -------------- spatial.py --------------
-
+preliminary idea:
+- solve the Linear Diophantine equations: ax + by + cz +... = alpha
+- a,b,c,... are the wattage of the appliances
+- x, y, z are the hours of usage estimated by the solver (time("all day") = 24, time("not in use") = 0)
+- sub in values to the dummy variable in the estimated time with in range [0,24] and find all reliable results
+- eliminate the results that have time('rare') >= time('often')
 
 *** to do ***
 -> need to change all the appliance information in the user_info database to be
