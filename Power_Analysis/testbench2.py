@@ -4,6 +4,12 @@ import Power_Analysis.db_update as update
 from datetime import datetime, timedelta
 from calendar import monthrange
 
+import math
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+import matplotlib.dates as mdates
+
 def mins_in_period(date_1, date_2):
     time_delta = (date_2 - date_1)
     total_seconds = time_delta.total_seconds()
@@ -121,6 +127,30 @@ for id, d in enumerate(date_list):
                     {d: {"off_peak": division[0] * 0.1, "on_peak": division[2] * 0.1, "mid_peak": division[1] * 0.1}})
 print(pd)
 print(power_calendar_divided)
+
+fig = plt.figure()
+fig.suptitle("Total Power Consumption Breakdown by Date")
+colors = ['#DBC9E9', '#C9F4FB', '#C9EFCB', '#FFFAC9','#FFE7C9', '#FDC9C9']
+ax = fig.add_axes([0,0,1,1])
+ax.axis('equal')
+langs = date_list
+students = mins_list
+ax.pie(students, labels = langs,autopct='%1.2f%%', colors=colors)
+fig.tight_layout()
+
+readings = power_calendar_divided['Jan-12-2022']
+cat = ['Off Peak', 'On Peak', 'Mid Peak']
+printer = [readings['off_peak'],readings['on_peak'],readings['mid_peak']]
+fig2 = plt.figure()
+fig2.suptitle("Power Breakdown by Category per Day")
+colors = ['#DBC9E9', '#C9F4FB', '#C9EFCB', '#FFFAC9','#FFE7C9', '#FDC9C9']
+ax2 = fig2.add_axes([0,0,1,1])
+ax2.axis('equal')
+langs2 = cat
+students2 = printer
+ax2.pie(students2, labels = langs2,autopct='%1.2f%%', colors=colors)
+fig2.tight_layout()
+plt.show()
 
 # month = datetime.now().strftime("%b")
 # num_days = monthrange(int(datetime.now().strftime("%Y"))

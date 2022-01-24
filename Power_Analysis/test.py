@@ -20,7 +20,7 @@ print("date and time =", dt_string)
 user_info = {
 # need to add more information here
         "id": 1,
-        "name": "Default",
+        "name": "Lee",
         "size": "3",
         "readings": {"1": "123"}, # readings should be in a dictionary form with {t_id: reading}
         "date": {"1": "Dec-29-2021 17:13:24"},  # date should be in a dictionary form with {t_id:date}
@@ -42,8 +42,25 @@ update.add_power_reading(tab,1,readings = ["125"],dates = ["Dec-31-2021 17:45:24
 search.print_collection(tab)
 
 # dd-mm-YY H:M:S
-update.add_power_reading(tab,1,readings = ["128"],dates = ["Dec-31-2021 19:13:24"])
+update.add_power_reading(tab,1,readings = ["128"],dates = ["Jan-01-2022 19:13:24"])
 search.print_collection(tab)
+
+# dd-mm-YY H:M:S
+update.add_power_reading(tab,1,readings = ["132"],dates = ["Jan-03-2022 07:13:24"])
+search.print_collection(tab)
+
+# dd-mm-YY H:M:S
+update.add_power_reading(tab,1,readings = ["135"],dates = ["Jan-05-2021 15:23:45"])
+search.print_collection(tab)
+
+# dd-mm-YY H:M:S
+update.add_power_reading(tab,1,readings = ["138"],dates = ["Jan-10-2022 12:13:24"])
+search.print_collection(tab)
+
+# dd-mm-YY H:M:S
+update.add_power_reading(tab,1,readings = ["142"],dates = ["Jan-12-2021 22:13:24"])
+search.print_collection(tab)
+
 
 # dd-mm-YY H:M:S
 now = datetime.now()
@@ -56,7 +73,7 @@ search.print_collection(tab)
 p,d = search.search_power_reading_date(tab, 1, min_date = 'Dec-29-2021 18:50:12', max_date = "Dec-31-2021 18:14:00")
 print(p,d)
 update.update_last_login(tab, 1)
-anal.plot_temporal(tab, 1, min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-31-2022 20:14:00")
+anal.plot_temporal(tab, 1, min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-15-2022 20:14:00")
 
 # test 4
 p,d = search.search_power_interval(tab, 1, 120, 130)

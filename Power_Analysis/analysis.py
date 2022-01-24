@@ -22,8 +22,12 @@ def plot_temporal(collection, usr_id, min_date, max_date):
     fig.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%d-%Y'))
     fig.gca().xaxis.set_major_locator(mdates.DayLocator())
 
-    ax.plot(date, power, label = 'Power')
+    ax.plot(date, power, label = 'User: '+str(usr_id))
     ax.grid()
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Power [kWh]")
+    ax.legend(loc='best')
+    plt.tight_layout()
 
     plt.gcf().autofmt_xdate()
     plt.show()
