@@ -1,8 +1,6 @@
 #######################################################################
-Created by Xuening Dong
-
-December 21st, 2021
-Last updated: January 20, 2022
+Created: December 21st, 2021
+Last updated: January 26, 2022
 #######################################################################
 
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
@@ -182,15 +180,20 @@ def estimate_bill_period(collection, usr_id, min_date, max_date)
 preliminary idea:
 - solve the Linear Diophantine equations: ax + by + cz +... = alpha
 - a,b,c,... are the wattage of the appliances
-- x, y, z are the hours of usage estimated by the solver (time("all day") = 24, time("not in use") = 0)
+- x, y, z are the hours of usage estimated by the solver (time("all day") = period length, time("not in use") = 0)
 - sub in values to the dummy variable in the estimated time with in range [0,24] and find all reliable results
 - eliminate the results that have time('rare') >= time('often')
 
-*** to do ***
--> need to change all the appliance information in the user_info database to be
-    the name of corresponding appliance list name, and fix the access to the appliance to be db['listname']
--> create a database for all the existing appliance models
+Problems:
+- the current version of solver can only solve integer based solutions (partially solved by transferring kW into W)
+- the number of hours from the results are all integers
+- due to the last problem, it is possible that no feasible solution is found
 
+def power_allocation(db, collection, usr_id, min_date, max_date)
+- estimate the amount of power each of the appliances used with user id
+
+*** to do ***
+-> create a database for all the existing appliance models
 
 *** to do ***
 def plot_spatial()

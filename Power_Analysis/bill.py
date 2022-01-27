@@ -34,11 +34,13 @@ class bill():
 
         self.total_bill = 0
 
+    # calculate the total number of minutes in a period
     def mins_in_period(self, date_1, date_2):
         time_delta = (date_2 - date_1)
         total_seconds = time_delta.total_seconds()
         return round(total_seconds / 60)
 
+    # get a list of dates during the period
     def gen_date_list(self, max_d, min_d):
         # date_2 = datetime.strptime((min_d.strftime("%b-%d-%Y") + " 23:59:59"), "%b-%d-%Y %H:%M:%S")
         dates, mins = [], []
@@ -96,15 +98,21 @@ class bill():
         return res
 
     def count_mins(self):
+        # if there is no duration in the period
         if len(self.dates) == 0 or len(self.dates) == 1:
             return
 
         for idx in range(1, len(self.dates)):
+            # find out the max and min dates
             prev_date, prev_power = self.dates[idx-1], self.power[idx-1]
             curr_date, curr_power = self.dates[idx], self.power[idx]
             minutes = self.mins_in_period(prev_date, curr_date)
             power = int(curr_power) - int(prev_power)
+
+            # assume a uniform power consumption over the period
             p_min = power / minutes
+
+            # get a list of dates and the corresponding minutes in the date where the period covers
             date_list, mins_list = self.gen_date_list(max_d = curr_date, min_d = prev_date)
 
             for id, d in enumerate(date_list):
@@ -157,10 +165,12 @@ class bill():
                                      "on_peak": p_min * division[2],
                                      "mid_peak": p_min * division[1]}})
 
+    # calculate the money spent according to the power consumption
     def calculate_bill(self):
         self.count_mins()
 
         for date in self.power_calendar_divided.keys():
+            # price = time * hourly price
             price_list = {
                 "off_peak": round(self.power_calendar_divided[date]["off_peak"] * self.price_off_peak),
                 "on_peak": round(self.power_calendar_divided[date]["on_peak"] * self.price_on_peak),
@@ -174,6 +184,7 @@ class bill():
             self.power_calendar_divided.update({date:price_list})
             self.total_bill += total
 
+    # update the price if needed
     def update_price(self, on  = None, off = None, mid = None):
         if on != None:
             self.price_on_peak = on
@@ -184,6 +195,8 @@ class bill():
         if mid != None:
             self.price_mid_peak = mid
 
+# estimate the bill payment over a month
+# start from the morning first day of the month to midnight of the last day
 def estimate_bill_month(collection, usr_id, month = None):
     if month == None:
         month = datetime.now().strftime("%b")
@@ -196,6 +209,7 @@ def estimate_bill_month(collection, usr_id, month = None):
 
     return estimate_bill_period(collection, usr_id, min_date, max_date)
 
+# calculate the bill payment over a specified period
 def estimate_bill_period(collection, usr_id, min_date, max_date):
     power_readings, dates = search.search_power_reading_date(collection,
                                                              usr_id, min_date, max_date, return_string = False)

@@ -10,27 +10,14 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.dates as mdates
+import Power_Analysis.plot as plot
 
 def plot_temporal(collection, usr_id, min_date, max_date):
     power, date = search.search_power_reading_date(collection, usr_id, min_date = min_date, max_date = max_date)
     for idx,p in enumerate(power):
         power[idx] = float(p)
         date[idx] = datetime.strptime(date[idx], "%b-%d-%Y %H:%M:%S")
-
-    fig, ax = plt.subplots()
-    fig.suptitle("Temporal plot")
-    fig.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%d-%Y'))
-    fig.gca().xaxis.set_major_locator(mdates.DayLocator())
-
-    ax.plot(date, power, label = 'User: '+str(usr_id))
-    ax.grid()
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Power [kWh]")
-    ax.legend(loc='best')
-    plt.tight_layout()
-
-    plt.gcf().autofmt_xdate()
-    plt.show()
+    plot. line_plot(date, power, usr_id, title = 'Time Variation')
 
 def plot_temporal_incremental(collection, usr_id, min_date, max_date):
     power, date = search.search_power_reading_date(collection, usr_id, min_date = min_date, max_date = max_date)
@@ -46,13 +33,4 @@ def plot_temporal_incremental(collection, usr_id, min_date, max_date):
         last_power = temp
         date[idx] = datetime.strptime(date[idx], "%b-%d-%Y %H:%M:%S")
 
-    fig, ax = plt.subplots()
-    fig.suptitle("Temporal plot")
-    fig.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%d-%Y'))
-    fig.gca().xaxis.set_major_locator(mdates.DayLocator())
-
-    ax.plot(date, power, label = 'Power')
-    ax.grid()
-
-    plt.gcf().autofmt_xdate()
-    plt.show()
+    plot.line_plot(date, power, usr_id, title = 'Time Incremental Variation')
