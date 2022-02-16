@@ -1,6 +1,6 @@
 #######################################################################
 Created: December 21st, 2021
-Last updated: January 26, 2022
+Last updated: Feb 16, 2022
 #######################################################################
 
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
@@ -11,6 +11,7 @@ extra installs:
 $ pip install pymongo==3.11.2
 $ pip install mongoengine==0.22.1
 $ pip install sympy
+$ pip install scipy
 
 Brief Introduction:
 The current versions of the functions are written in separate files.
@@ -32,7 +33,7 @@ datetime: the time and date the corresponding power meter reading with the same 
 appliance:
     - In user_info (input):
         format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
-        usage frequency choices: "all day", "often", "rare", "not in use"
+        usage frequency choices: "all day", "often" (12-24 hrs per day, e.g. shut down when sleeping), "rare"(0-12 hrs per day, e.g. switch on per use), "not in use"
     - Actually stored:
         The name of the collection
 password:
@@ -169,20 +170,35 @@ def estimate_bill_period(collection, usr_id, min_date, max_date)
         mid_peak
         on_peak
 
-    power_calendar: power spent on each day over the period
-    power_calendar_divided: power spent on each day over the period divided into three categories by time
-    price_calendar: bill payment on each day over the period
-    price_calendar_divided: bill payment on each day over the period divided into three categories by time
+    power_calendar: power spent on each day over the period (key: date, value: power spent)
+    power_calendar_divided: power spent on each day over the period divided into three categories by time (key: date, value: {key: category, value: power}})
+    price_calendar: bill payment on each day over the period (key: date, value: bill payment)
+    price_calendar_divided: bill payment on each day over the period divided into three categories by time (key: date, value: {key: category, value: bill payment}}
 
     total_bill: total estimated payment
 
 -------------- spatial.py --------------
-preliminary idea:
+Preliminary idea:
 - solve the Linear Diophantine equations: ax + by + cz +... = alpha
 - a,b,c,... are the wattage of the appliances
 - x, y, z are the hours of usage estimated by the solver (time("all day") = period length, time("not in use") = 0)
 - sub in values to the dummy variable in the estimated time with in range [0,24] and find all reliable results
 - eliminate the results that have time('rare') >= time('often')
+--> working version 1: able to calculate the integer time value for up to 3 non-constant appliances
+
+Method 1: Brute force + CSP
+-> we now limit the estimation range to a specific day
+-> use the power reading from the beginning to the end of a day (we need some extra function here)
+-> then the maximum # hours would be 24
+-> we parse through all the hours with only 1 significant bit
+-> constraints include time('rare') < time('often'), time("all day") = 24, time("not in use") = 0
+-> together with the total sum constraint
+-> at most search 240^n iterations (where n is the number of appliances)
+-> add some assumptions? 12<often<24 (shut down when sleeping) and 0<rare<12 (switch on per time of usage)
+
+Method 2: Least Square Regression
+-> impossible because we only have one equation
+
 
 Problems:
 - the current version of solver can only solve integer based solutions (partially solved by transferring kW into W)

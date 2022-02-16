@@ -57,8 +57,8 @@ search.print_collection(tab)
 names, hrs, consumption = space.power_allocation(db = db, collection = tab, usr_id = 1,
                        min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-15-2022 20:14:00")
 print(names, hrs)
-plot.pie_plot(labels=names, data=hrs, usr_id=1, title="Spatial time breakdown")
-plot.pie_plot(labels=names, data=consumption, usr_id=1, title="Spatial power breakdown")
+plot.pie_plot(labels=names, data=hrs, usr_id=1, title="Spatial time breakdown", colors=['#BDC7D3', '#D9CDC1','#E4E1D0'])
+#plot.pie_plot(labels=names, data=consumption, usr_id=1, title="Spatial power breakdown")
 
 login.remove_user(db, tab,1)
 login.remove_collection(tab)

@@ -4,9 +4,19 @@ import Power_Analysis.db_update as update
 from datetime import datetime, timedelta
 from calendar import monthrange
 import copy
+import time as t
 
 import numpy as np
 from sympy import *
+
+class Appliance():
+    def __init__(self, name, domain, wattage):
+        self.name = name
+        self.domain = domain
+        self.wattage = wattage
+
+    def get_domain_size(self):
+        return len(self.domain)
 
 # create the unknowns in the equation
 def organize_alphabet(unknown):
@@ -115,7 +125,7 @@ def power_allocation(db, collection, usr_id, min_date, max_date):
     # print(watt)
     ascii, label = organize_alphabet(unknown = unknowns)
     res_eqn = eqn_to_sol(coeff=watt, alpha=ascii, labels=label, const=-int(power_consumed))
-    # print(res_eqn)
+    print(res_eqn)
 
     possible_time, result = find_potential_res(res_eqn, max_hrs=max_hrs)
     # print(possible_time, result)
@@ -150,7 +160,43 @@ def power_allocation(db, collection, usr_id, min_date, max_date):
 
     return app_name, hrs, consumption
 
+def test_spatial_CSP():
+    wattage = np.array([3, 5, 7])
+    time = np.array([1, 15, 3])
+    wattage_T = np.transpose(wattage)
+    sum = np.dot(wattage, time)
 
+    timer = [i * 0.1 for i in range(240)]
+    print(timer)
+
+    print(np.dot(wattage, time))
+
+    appliance_list = []
+    appliance_list.append(Appliance(name='microwave', domain=[i * 0.1 for i in range(1, 120)], wattage=3))
+    appliance_list.append(Appliance(name='fridge', domain=[i * 0.1 for i in range(120, 239)], wattage=5))
+    appliance_list.append(Appliance(name='laptop', domain=[i * 0.1 for i in range(1, 120)], wattage=7))
+
+    start = t.time()
+    count = 0
+
+    for ele in appliance_list[0].domain:
+        if ele * appliance_list[0].wattage > sum:
+            continue
+
+        for ele2 in appliance_list[1].domain:
+            if ele * appliance_list[0].wattage + ele2 * appliance_list[1].wattage > sum:
+                continue
+
+            for ele3 in appliance_list[2].domain:
+                if ele * appliance_list[0].wattage + ele2 * appliance_list[1].wattage + ele3 * appliance_list[
+                    2].wattage == sum:
+                    print(ele, ele2, ele3)
+                    count += 1
+                    break
+
+    end = t.time()
+    print("elapse time: ", end-start)
+    print(count, "solutions found")
 # ap, vv = organize_alphabet(2)
 # ff = [None for _ in range(2)]
 # ff = symbols(vv)
@@ -158,3 +204,4 @@ def power_allocation(db, collection, usr_id, min_date, max_date):
 # print(sep)
 # possible_time, result = find_potential_res(sep, max_hrs=24)
 # print(possible_time, result)
+test_spatial_CSP()

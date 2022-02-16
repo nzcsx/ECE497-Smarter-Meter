@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.dates as mdates
 
+import numpy as np
+
 def mins_in_period(date_1, date_2):
     time_delta = (date_2 - date_1)
     total_seconds = time_delta.total_seconds()
@@ -125,31 +127,66 @@ for id, d in enumerate(date_list):
             else:
                 power_calendar_divided.update(
                     {d: {"off_peak": division[0] * 0.1, "on_peak": division[2] * 0.1, "mid_peak": division[1] * 0.1}})
+
+# calculate the money spent according to the power consumption
+
+price_off_peak = 8.2
+price_mid_peak = 11.3
+price_on_peak = 17.0
+total_bill = 0
+price_calendar = {}
+price_calendar_divided = {}
+
+for date in power_calendar_divided.keys():
+    # price = time * hourly price
+    price_list = {
+        "off_peak": round(power_calendar_divided[date]["off_peak"] * price_off_peak),
+        "on_peak": round(power_calendar_divided[date]["on_peak"] * price_on_peak),
+        "mid_peak": round(power_calendar_divided[date]["mid_peak"] * price_mid_peak)
+    }
+    total = round(power_calendar_divided[date]["off_peak"] * price_off_peak) \
+            + round(power_calendar_divided[date]["on_peak"] * price_on_peak) \
+            + round(power_calendar_divided[date]["mid_peak"] * price_mid_peak)
+
+    price_calendar.update({date: total})
+    price_calendar_divided.update({date:price_list})
+    total_bill += total
+
 print(pd)
 print(power_calendar_divided)
+print(price_calendar_divided)
+print(price_calendar)
 
-fig = plt.figure()
-fig.suptitle("Total Power Consumption Breakdown by Date")
-colors = ['#DBC9E9', '#C9F4FB', '#C9EFCB', '#FFFAC9','#FFE7C9', '#FDC9C9']
-ax = fig.add_axes([0,0,1,1])
-ax.axis('equal')
-langs = date_list
-students = mins_list
-ax.pie(students, labels = langs,autopct='%1.2f%%', colors=colors)
-fig.tight_layout()
 
-readings = power_calendar_divided['Jan-12-2022']
+# fig = plt.figure()
+# fig.suptitle("Bill payment Breakdown by Date")
+# colors = ['#DBC9E9', '#C9F4FB', '#C9EFCB', '#FFFAC9','#FFE7C9', '#FDC9C9']
+# ax = fig.add_axes([0,0,1,1])
+# ax.axis('equal')
+# langs = date_list
+# students = mins_list
+# ax.pie(students, labels = langs,autopct='%1.2f%%', colors=colors)
+# fig.tight_layout()
+#
+
+
+readings = price_calendar_divided['Jan-12-2022']
 cat = ['Off Peak', 'On Peak', 'Mid Peak']
 printer = [readings['off_peak'],readings['on_peak'],readings['mid_peak']]
 fig2 = plt.figure()
-fig2.suptitle("Power Breakdown by Category per Day")
-colors = ['#DBC9E9', '#C9F4FB', '#C9EFCB', '#FFFAC9','#FFE7C9', '#FDC9C9']
+fig2.suptitle("Bill payment Breakdown by Category per Day")
+colors = ['#4A406C', '#9085A7', '#E4E1D9']
 ax2 = fig2.add_axes([0,0,1,1])
 ax2.axis('equal')
 langs2 = cat
-students2 = printer
-ax2.pie(students2, labels = langs2,autopct='%1.2f%%', colors=colors)
-fig2.tight_layout()
+
+students2 = np.array(printer)
+def absolute_value(val):
+    a  = np.round(val/100.*students2.sum(), 0)
+    return a
+
+ax2.pie(students2, labels = langs2,
+        autopct=absolute_value, colors=colors)
 plt.show()
 
 # month = datetime.now().strftime("%b")

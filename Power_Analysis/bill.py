@@ -181,7 +181,7 @@ class bill():
                     + round(self.power_calendar_divided[date]["mid_peak"] * self.price_mid_peak)
 
             self.price_calendar.update({date: total})
-            self.power_calendar_divided.update({date:price_list})
+            self.price_calendar_divided.update({date:price_list})
             self.total_bill += total
 
     # update the price if needed

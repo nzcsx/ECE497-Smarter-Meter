@@ -30,7 +30,7 @@ def line_plot(date, power, usr_id, title):
 def pie_plot(labels, data, usr_id, title, colors = None):
     fig = plt.figure()
     fig.suptitle("User " + str(usr_id) +" " + title)
-    if colors == None:
+    if colors is None:
         colors = ['#DBC9E9', '#C9F4FB', '#C9EFCB', '#FFFAC9', '#FFE7C9', '#FDC9C9']
     ax = fig.add_axes([0, 0, 1, 1])
     ax.axis('equal')
