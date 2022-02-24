@@ -1,6 +1,6 @@
 #######################################################################
 Created: December 21st, 2021
-Last updated: Feb 16, 2022
+Last updated: Feb 24, 2022
 #######################################################################
 
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
@@ -193,7 +193,7 @@ Method 1: Brute force
 -> constraints include time('rare') < time('often'), time("all day") = 24, time("not in use") = 0
 -> add some assumptions? hrs/2<often<hrs (shut down when sleeping) and 0<rare<hrs/2 (switch on per time of usage)
 
-Method 2: Brute force + CSP
+Method 2: Brute force + CSP (for future implementation)
 -> we now limit the estimation range to a specific day
 -> use the power reading from the beginning to the end of a day (we need some extra function here)
 -> then the maximum # hours would be 24
@@ -221,8 +221,18 @@ def power_allocation(db, collection, usr_id, min_date, max_date)
 *** to do ***
 def plot_spatial()
 def generate_warning()
-def how_you_should_use_your_electricity_wisely()
 bill payment estimations subject to the seasons
+
+-------------- power_report.py --------------
+def display_report(db, collection, usr_id, min_date, max_date, export = False)
+- generate a series of report according to the power consumption data stored
+- can be printed out into .txt file
+
+def how_you_should_use_your_electricity_wisely()
+
+*** to do ***
+check the bill estimation functions and add them to the report
+provide some preliminary analysis into the data patterns
 
 -------------- Datetime format --------------
 %b Month as locale’s abbreviated name(Jun)

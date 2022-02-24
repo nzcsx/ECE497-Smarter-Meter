@@ -1,0 +1,19 @@
+------------ Your Report of Electricity Consumption ------------
+     From Dec-29-2021 12:50:12 To Jan-10-2022 22:13:25
+
+------------ Power consumption Recorded ------------
+Date: Dec-29-2021 17:13:24 consumed a total of 123 watts.
+Date: Dec-31-2021 17:45:24 consumed a total of 125 watts.
+Date: Jan-01-2022 19:13:24 consumed a total of 190 watts.
+Date: Jan-03-2022 07:13:24 consumed a total of 217 watts.
+Date: Jan-10-2022 12:13:24 consumed a total of 293 watts.
+-> In a total of 283 hours used 170000 watts.
+-> Maximum power difference of 76 watts between Jan-03-2022 07:13:24 and Jan-10-2022 12:13:24
+
+------------ Spatial Allocation of consumption ------------
+Household Appliance fridge has been used for approximately 283.0 hours. Consuming a total of 169800.0 watts
+Household Appliance laptop has been used for approximately 141.6 hours. Consuming a total of 14.16 watts
+Household Appliance lamp has been used for approximately 259.7 hours. Consuming a total of 51.94 watts
+Household Appliance oven has been used for approximately 133.9 hours. Consuming a total of 133.9 watts
+
+------------ Your Bill Estimation ------------
