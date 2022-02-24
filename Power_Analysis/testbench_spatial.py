@@ -19,7 +19,8 @@ user_info = {
         "readings": {"1": "123"}, # readings should be in a dictionary form with {t_id: reading}
         "date": {"1": "Dec-29-2021 17:13:24"},  # date should be in a dictionary form with {t_id:date}
         "appliance": [["fridge", 600, 1, "all day"],
-                      ["laptop", 3, 1, "often"],
+                      ["laptop", 0.1, 1, "often"],
+                      ["lamp", 0.2, 1, "often"],
                       ["oven", 1, 1, "rare"]], #"all day", "often", "rare", "not in use"
         "password": "yes",
         "reset_Q": "My name?",
@@ -54,8 +55,8 @@ search.print_collection(tab)
 
 
 
-names, hrs, consumption = space.power_allocation(db = db, collection = tab, usr_id = 1,
-                       min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-15-2022 20:14:00")
+names, hrs, consumption = space.spatial_itertool(db = db, collection = tab, usr_id = 1,
+                       min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-10-2022 22:13:25")
 print(names, hrs)
 plot.pie_plot(labels=names, data=hrs, usr_id=1, title="Spatial time breakdown", colors=['#BDC7D3', '#D9CDC1','#E4E1D0'])
 #plot.pie_plot(labels=names, data=consumption, usr_id=1, title="Spatial power breakdown")

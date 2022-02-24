@@ -186,7 +186,14 @@ Preliminary idea:
 - eliminate the results that have time('rare') >= time('often')
 --> working version 1: able to calculate the integer time value for up to 3 non-constant appliances
 
-Method 1: Brute force + CSP
+Method 1: Brute force
+-> using the itertool to iterate through all the possible combination of wattage
+-> find out the one sum up to the total consumption
+-> if not found one, report the closest solution
+-> constraints include time('rare') < time('often'), time("all day") = 24, time("not in use") = 0
+-> add some assumptions? hrs/2<often<hrs (shut down when sleeping) and 0<rare<hrs/2 (switch on per time of usage)
+
+Method 2: Brute force + CSP
 -> we now limit the estimation range to a specific day
 -> use the power reading from the beginning to the end of a day (we need some extra function here)
 -> then the maximum # hours would be 24

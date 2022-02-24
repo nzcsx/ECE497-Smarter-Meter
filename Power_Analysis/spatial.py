@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from calendar import monthrange
 import copy
 import time as t
+import itertools
 
 import numpy as np
 from sympy import *
@@ -160,6 +161,92 @@ def power_allocation(db, collection, usr_id, min_date, max_date):
 
     return app_name, hrs, consumption
 
+# Method 2: using the itertool in python to list all wattage in brute force
+def spatial_itertool(db, collection, usr_id, min_date, max_date):
+    start = t.time()
+    search.print_appliance_info(db=db, collection=collection, usr_id=usr_id)
+
+    # get the appliance list
+    app_list = search.search_appliance_list(db=db, collection=collection, usr_id=usr_id)
+
+    # get power meter readings within the list
+    power_readings, dates = search.search_power_reading_date(collection,
+                                                             usr_id, min_date, max_date, return_string=False)
+    # print(power_readings, dates)
+
+    # find the number of hours in the period
+    max_hrs = hrs_in_period(dates[0], dates[-1])
+    #print(max_hrs)
+
+    # find the total power consumed during the period
+    power_consumed = int(float(power_readings[-1]) - float(power_readings[0])) * 1000
+    #print(power_consumed)
+
+    # register for all the appliances in the list
+    appliance_list, app_name = [], []
+    range_dict = {
+        "not in use": range(0, 1),
+        "rare": range(1, max_hrs*10//2),
+        "often": range(max_hrs*10//2, max_hrs*10),
+        "all day": range(max_hrs*10, max_hrs*10 + 1)
+    }
+
+    for app in app_list:
+        app_name.append(app[0])
+        appliance_list.append(
+            Appliance(name=app[0],
+                      domain=[i * 0.1 * app[1] * app[2] for i in range_dict[app[-1]] if i * 0.1 * app[1] * app[2] <= power_consumed],
+                      wattage=app[1] * app[2]))
+
+    # organize the call for itertool
+    exp = ""
+    for idx in range(len(appliance_list)):
+        exp += "appliance_list[" + str(idx) + "].domain,"
+
+    func = "itertools.product(" + exp + ")"
+    count, min_diff = 0, float("inf")
+    solution, min_diff_sol = [], []
+
+    # calculate the sum of different combinations of wattage
+    for cell in eval(func):
+        sum = 0
+        for val in cell:
+            sum += val
+
+        if sum == power_consumed:
+            solution.append(cell)
+            min_diff = 0
+            min_diff_sol = []
+            count += 1
+            if count >= 120:
+                break
+        elif min_diff > 0:
+            if abs(sum - power_consumed) < min_diff:
+                min_diff = abs(sum - power_consumed)
+                min_diff_sol = [cell]
+            elif abs(sum - power_consumed) == min_diff:
+                min_diff_sol.append(cell)
+
+        end = t.time()
+        if end - start > 30:
+            break
+
+    end = t.time()
+    print("elapse time: ", end - start)
+    print(count, "solutions found")
+
+    if count != 0:
+        sol = solution[len(solution)//2]
+    else:
+        sol = min_diff_sol[len(min_diff_sol)//2]
+
+    hrs, consumption = [], []
+    for idx in range(len(app_list)):
+        hrs.append(sol[idx] / (app_list[idx][1] * app_list[idx][2]))
+        consumption.append(sol[idx])
+
+    return app_name, hrs, consumption
+
 def test_spatial_CSP():
     wattage = np.array([3, 5, 7])
     time = np.array([1, 15, 3])
@@ -204,4 +291,4 @@ def test_spatial_CSP():
 # print(sep)
 # possible_time, result = find_potential_res(sep, max_hrs=24)
 # print(possible_time, result)
-test_spatial_CSP()
+#test_spatial_CSP()
