@@ -37,3 +37,16 @@ def pie_plot(labels, data, usr_id, title, colors = None):
 
     ax.pie(data, labels=labels, autopct='%1.2f%%', colors=colors)
     plt.show()
+
+def bar_plot(labels, data, usr_id, title, xlabel ="", ylabel = "", colors = None):
+    fig, ax = plt.subplots()
+    fig.suptitle("User " + str(usr_id) + " " + title)
+
+    ax.bar(labels, data)
+    # new helper method to auto-label bars
+    ax.bar_label(ax.containers[0])
+
+    ax.set_ylabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.tight_layout()
+    plt.show()

@@ -2,6 +2,7 @@ import Power_Analysis.db_login as login
 import Power_Analysis.db_search as search
 import Power_Analysis.db_update as update
 from datetime import datetime, timedelta
+import Power_Analysis.plot as plot
 from calendar import monthrange
 
 import math
@@ -130,9 +131,9 @@ for id, d in enumerate(date_list):
 
 # calculate the money spent according to the power consumption
 
-price_off_peak = 8.2
-price_mid_peak = 11.3
-price_on_peak = 17.0
+price_off_peak = 8.2 / 100
+price_mid_peak = 11.3 / 100
+price_on_peak = 17.0 / 100
 total_bill = 0
 price_calendar = {}
 price_calendar_divided = {}
@@ -157,6 +158,11 @@ print(power_calendar_divided)
 print(price_calendar_divided)
 print(price_calendar)
 
+labels, data = [], []
+for key in price_calendar.keys():
+    labels.append(key)
+    data.append(price_calendar[key])
+plot.bar_plot(labels, data, 1, "Payment Breakdown","Date","Price [$]", colors = None)
 
 # fig = plt.figure()
 # fig.suptitle("Bill payment Breakdown by Date")
@@ -185,9 +191,9 @@ def absolute_value(val):
     a  = np.round(val/100.*students2.sum(), 0)
     return a
 
-ax2.pie(students2, labels = langs2,
-        autopct=absolute_value, colors=colors)
-plt.show()
+# ax2.pie(students2, labels = langs2,
+#         autopct=absolute_value, colors=colors)
+# plt.show()
 
 # month = datetime.now().strftime("%b")
 # num_days = monthrange(int(datetime.now().strftime("%Y"))

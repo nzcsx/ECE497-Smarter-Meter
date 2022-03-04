@@ -20,7 +20,7 @@ def print_user_info(db, collection, usr_id):
     res_p = res["readings"]
     for key in res_p:
         print("Reading at time:",datetime.strptime(res["datetime"][key], "%b-%d-%Y %H:%M:%S"),
-              " with reading: ",res_p[key], "W")
+              " with reading: ",res_p[key], "kWh")
     print("Appliance information:",)
     print_appliance_info(db, collection, usr_id)
 

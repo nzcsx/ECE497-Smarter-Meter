@@ -41,9 +41,10 @@ def display_report(db, collection, usr_id, min_date, max_date, export = False):
             print()
             print("------------ Power consumption Recorded ------------")
             for idx in range(len(dates)):
-                print("Date:",dates[idx], "consumed a total of",str(power_readings[idx]), "watts.")
-            print("-> In a total of",str(max_hrs), "hours used", str(power_consumed), "watts.")
-            print("-> Maximum power difference of",max_power,"watts between",dates[max_index], "and", dates[max_index+1])
+                print("Date:",dates[idx], "has a record of",str(power_readings[idx]), "KWh.")
+            print("-> In a total of",str(max_hrs), "hours used", str(power_consumed/1000), "kWh.")
+            print("-> Maximum power difference of",max_power,"KWh between",dates[max_index])
+            print("and", dates[max_index+1])
             sys.stdout = original_stdout  # Reset the standard output to its original value
 
             names, hrs, consumption = space.spatial_itertool(db=db, collection=collection, usr_id=1,
@@ -54,7 +55,7 @@ def display_report(db, collection, usr_id, min_date, max_date, export = False):
             print("------------ Spatial Allocation of consumption ------------")
             for idx in range(len(names)):
                 print("Household Appliance "+names[idx]+" has been used for approximately",str(hrs[idx]),
-                      "hours. Consuming a total of", str(consumption[idx]),"watts")
+                      "hours. Estimated to consume ", str(consumption[idx]/1000),"kWh")
             sys.stdout = original_stdout  # Reset the standard output to its original value
 
             # Bill estimation here
@@ -94,9 +95,9 @@ def display_report(db, collection, usr_id, min_date, max_date, export = False):
         print()
         print("------------ Power consumption Recorded ------------")
         for idx in range(len(dates)):
-            print("Date:", dates[idx], "consumed a total of", str(power_readings[idx]), "watts.")
+            print("Date:", dates[idx], "Has a record of", str(power_readings[idx]), "kWh.")
         print("-> In a total of", str(max_hrs), "hours used", str(power_consumed), "watts.")
-        print("-> Maximum power difference of", max_power, "watts between", dates[max_index], "and",
+        print("-> Maximum power difference of", max_power, "KWh between", dates[max_index], "and",
               dates[max_index + 1])
         sys.stdout = original_stdout  # Reset the standard output to its original value
 
@@ -108,7 +109,7 @@ def display_report(db, collection, usr_id, min_date, max_date, export = False):
         print("------------ Spatial Allocation of consumption ------------")
         for idx in range(len(names)):
             print("Household Appliance " + names[idx] + " has been used for approximately", str(hrs[idx]),
-                  "hours. Consuming a total of", str(consumption[idx]), "watts")
+                  "hours. Estimated to consume", str(consumption[idx]), "KWh")
         sys.stdout = original_stdout  # Reset the standard output to its original value
 
         # Bill estimation here

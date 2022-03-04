@@ -19,9 +19,9 @@ class bill():
         self.power = usr_info['power']
         self.dates = usr_info['dates']
 
-        self.price_off_peak = 8.2
-        self.price_mid_peak = 11.3
-        self.price_on_peak = 17.0
+        self.price_off_peak = 8.2 / 100
+        self.price_mid_peak = 11.3 / 100
+        self.price_on_peak = 17.0 / 100
 
         self.off_peak = 0
         self.mid_peak = 0
