@@ -4,17 +4,48 @@
 ------------ Power consumption Recorded ------------
 Date: Dec-29-2021 17:13:24 has a record of 123 KWh.
 Date: Dec-31-2021 17:45:24 has a record of 125 KWh.
-Date: Jan-01-2022 19:13:24 has a record of 190 KWh.
-Date: Jan-03-2022 07:13:24 has a record of 217 KWh.
-Date: Jan-10-2022 12:13:24 has a record of 293 KWh.
--> In a total of 283 hours used 170.0 kWh.
--> Maximum power difference of 76 KWh between Jan-03-2022 07:13:24
+Date: Jan-01-2022 19:13:24 has a record of 290 KWh.
+Date: Jan-03-2022 07:13:24 has a record of 317 KWh.
+Date: Jan-10-2022 12:13:24 has a record of 593 KWh.
+-> In a total of 283 hours used 470.0 kWh.
+-> Maximum power difference of 276 KWh between Jan-03-2022 07:13:24
 and Jan-10-2022 12:13:24
 
 ------------ Spatial Allocation of consumption ------------
 Household Appliance fridge has been used for approximately 283.0 hours. Estimated to consume  169.8 kWh
-Household Appliance laptop has been used for approximately 141.6 hours. Estimated to consume  0.01416 kWh
-Household Appliance lamp has been used for approximately 259.7 hours. Estimated to consume  0.05194 kWh
-Household Appliance oven has been used for approximately 133.9 hours. Estimated to consume  0.13390000000000002 kWh
+Household Appliance laptop has been used for approximately 143.5 hours. Estimated to consume  0.014 kWh
+Household Appliance lamp has been used for approximately 282.9 hours. Estimated to consume  0.057 kWh
+Household Appliance oven has been used for approximately 141.4 hours. Estimated to consume  0.141 kWh
 
 ------------ Your Bill Estimation ------------
+Date: Dec-29-2021 has an estimated total payment of 0.029
+which composes of $ 0.012 on peak, $ 0.017 off peak and $ 0.0 mid peal
+Date: Dec-30-2021 has an estimated total payment of 16.092
+which composes of $ 6.12 on peak, $ 5.904 off peak and $ 4.068 mid peal
+Date: Dec-31-2021 has an estimated total payment of 4.118
+which composes of $ 1.41 on peak, $ 2.68 off peak and $ 0.028 mid peal
+Date: Jan-01-2022 has an estimated total payment of 15.324
+which composes of $ 6.853 on peak, $ 4.05 off peak and $ 4.421 mid peal
+Date: Jan-02-2022 has an estimated total payment of 17.212
+which composes of $ 17.212 off peak
+Date: Jan-03-2022 has an estimated total payment of 3.763
+which composes of $ 1.596 on peak, $ 1.085 off peak and $ 1.082 mid peal
+Date: Jan-04-2022 has an estimated total payment of 16.092
+which composes of $ 6.12 on peak, $ 5.904 off peak and $ 4.068 mid peal
+Date: Jan-05-2022 has an estimated total payment of 16.092
+which composes of $ 6.12 on peak, $ 5.904 off peak and $ 4.068 mid peal
+Date: Jan-06-2022 has an estimated total payment of 16.092
+which composes of $ 6.12 on peak, $ 5.904 off peak and $ 4.068 mid peal
+Date: Jan-07-2022 has an estimated total payment of 16.092
+which composes of $ 6.12 on peak, $ 5.904 off peak and $ 4.068 mid peal
+Date: Jan-08-2022 has an estimated total payment of 16.092
+which composes of $ 6.12 on peak, $ 5.904 off peak and $ 4.068 mid peal
+Date: Jan-09-2022 has an estimated total payment of 3.14
+which composes of $ 3.14 off peak
+Date: Jan-10-2022 has an estimated total payment of 2.22
+which composes of $ 1.085 on peak, $ 0.916 off peak and $ 0.219 mid peal
+Date: Jan-11-2022 has an estimated total payment of 2.22
+which composes of $ 1.085 on peak, $ 0.916 off peak and $ 0.219 mid peal
+                       IN TOTAL
+-> On peak 11172.479 kWh on peak, 4015.641 kWh off peak, 3763.525 kWh mid peak,
+-> Bill Payment = $ 144.578

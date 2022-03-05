@@ -27,10 +27,12 @@ class bill():
         self.mid_peak = 0
         self.on_peak = 0
 
-        self.power_calendar = {}
-        self.power_calendar_divided = {}
+        self.power_calendar = {} # unit is Wh
+        self.power_calendar_divided = {} # unit is Wh
         self.price_calendar = {}
         self.price_calendar_divided = {}
+
+        self.hours_divided = [0, 0, 0] # Unit in kWh
 
         self.total_bill = 0
 
@@ -45,7 +47,7 @@ class bill():
         # date_2 = datetime.strptime((min_d.strftime("%b-%d-%Y") + " 23:59:59"), "%b-%d-%Y %H:%M:%S")
         dates, mins = [], []
 
-        for i in range((max_d - min_d).days + 1):
+        for i in range((max_d - min_d).days + 2):
             dates.append((min_d + timedelta(i)).strftime("%b-%d-%Y"))
 
             if i != (max_d - min_d).days:
@@ -165,6 +167,12 @@ class bill():
                                      "on_peak": p_min * division[2],
                                      "mid_peak": p_min * division[1]}})
 
+    def collect_divided_hours(self):
+        for key in self.power_calendar_divided.keys():
+            self.hours_divided[0] += self.power_calendar_divided[key]['off_peak']/1000
+            self.hours_divided[1] += self.power_calendar_divided[key]['on_peak']/1000
+            self.hours_divided[2] += self.power_calendar_divided[key]['mid_peak']/1000
+
     # calculate the money spent according to the power consumption
     def calculate_bill(self):
         self.count_mins()
@@ -172,17 +180,19 @@ class bill():
         for date in self.power_calendar_divided.keys():
             # price = time * hourly price
             price_list = {
-                "off_peak": round(self.power_calendar_divided[date]["off_peak"] * self.price_off_peak),
-                "on_peak": round(self.power_calendar_divided[date]["on_peak"] * self.price_on_peak),
-                "mid_peak": round(self.power_calendar_divided[date]["mid_peak"] * self.price_mid_peak)
+                "off_peak": round(self.power_calendar_divided[date]["off_peak"] * self.price_off_peak, 3),
+                "on_peak": round(self.power_calendar_divided[date]["on_peak"] * self.price_on_peak, 3),
+                "mid_peak": round(self.power_calendar_divided[date]["mid_peak"] * self.price_mid_peak, 3)
             }
-            total = round(self.power_calendar_divided[date]["off_peak"] * self.price_off_peak) \
-                    + round(self.power_calendar_divided[date]["on_peak"] * self.price_on_peak) \
-                    + round(self.power_calendar_divided[date]["mid_peak"] * self.price_mid_peak)
+            total = round(self.power_calendar_divided[date]["off_peak"] * self.price_off_peak, 3) \
+                    + round(self.power_calendar_divided[date]["on_peak"] * self.price_on_peak, 3) \
+                    + round(self.power_calendar_divided[date]["mid_peak"] * self.price_mid_peak, 3)
 
-            self.price_calendar.update({date: total})
+            self.price_calendar.update({date: round(total, 3)})
             self.price_calendar_divided.update({date:price_list})
             self.total_bill += total
+
+            self.collect_divided_hours()
 
     # update the price if needed
     def update_price(self, on  = None, off = None, mid = None):

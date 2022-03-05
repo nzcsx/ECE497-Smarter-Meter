@@ -34,24 +34,26 @@ update.add_power_reading(tab,1,readings = ["125"],dates = ["Dec-31-2021 17:45:24
 #search.print_collection(tab)
 
 # dd-mm-YY H:M:S
-update.add_power_reading(tab,1,readings = ["190"],dates = ["Jan-01-2022 19:13:24"])
+update.add_power_reading(tab,1,readings = ["290"],dates = ["Jan-01-2022 19:13:24"])
 #search.print_collection(tab)
 
 # dd-mm-YY H:M:S
-update.add_power_reading(tab,1,readings = ["217"],dates = ["Jan-03-2022 07:13:24"])
+update.add_power_reading(tab,1,readings = ["317"],dates = ["Jan-03-2022 07:13:24"])
 #search.print_collection(tab)
 
 # dd-mm-YY H:M:S
-update.add_power_reading(tab,1,readings = ["236"],dates = ["Jan-05-2021 15:23:45"])
+update.add_power_reading(tab,1,readings = ["436"],dates = ["Jan-05-2021 15:23:45"])
 #search.print_collection(tab)
 
 # dd-mm-YY H:M:S
-update.add_power_reading(tab,1,readings = ["293"],dates = ["Jan-10-2022 12:13:24"])
+update.add_power_reading(tab,1,readings = ["593"],dates = ["Jan-10-2022 12:13:24"])
 #search.print_collection(tab)
 
 # dd-mm-YY H:M:S
-update.add_power_reading(tab,1,readings = ["292.882"],dates = ["Jan-12-2021 22:13:24"])
+update.add_power_reading(tab,1,readings = ["692.882"],dates = ["Jan-12-2021 22:13:24"])
 #search.print_collection(tab)
 
 report.display_report(db = db, collection = tab, usr_id = 1,
                        min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-10-2022 22:13:25", export=True)
+
+print("report done")

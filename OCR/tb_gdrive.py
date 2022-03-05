@@ -4,7 +4,7 @@ import os
 drive = load.connect()
 
 img_dir = "1yyvOtfKZ-9LHFsmysg8ONTKvd0MnBAqV"
-DATA_SAVE_PATH = "/Users/dongxuening/Desktop/capstone_code/OCR/contents"
+DATA_SAVE_PATH = "/Users/dongxuening/Desktop/capstone_code/OCR/content"
 # if not os.path.isdir(DATA_SAVE_PATH):
 #     print("Path ", DATA_SAVE_PATH, "has not formed")
 #     os.mkdir(DATA_SAVE_PATH)
