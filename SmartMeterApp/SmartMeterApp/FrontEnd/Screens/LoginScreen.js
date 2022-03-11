@@ -85,13 +85,19 @@ export default function Login({ navigation }) {
 
     return (
         <View style={styles.body} >
+            <View style = {styles.backgroundContainer}>
+            <Image
+                style={styles.logo_curve}
+                source={require('../../assets/icon/curve.png')}
+            />
+            </View>
+            <Text style={styles.text}>
+            </Text>
 
-            <Text style={styles.text}>
-                
-            </Text>
-            <Text style={styles.text}>
-                Smart Meter Application
-            </Text>
+            <Image
+                style={styles.logo}
+                source={require('../../assets/icon/icon.png')}
+            />
             <TextInput
                 style={styles.input}
                 placeholder='Enter your name'
@@ -104,7 +110,7 @@ export default function Login({ navigation }) {
             />
             <CustomButton
                 title='Login'
-                color='#1eb900'
+                color='#83cfe3'
                 onPressFunction={setData}
             />
         </View>
@@ -112,19 +118,33 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    backgroundContainer: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
     body: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#0080ff',
+        backgroundColor: '#eeeeee',
     },
     logo: {
-        width: 200,
-        height: 100,
+        resizeMode: "cover",
+        width: 130,
+        height: 130,
         margin: 20,
+    },
+    logo_curve: {
+        resizeMode: "cover",
+        width: 420,
+        height: 420,
+        margin: 0,
     },
     text: {
         fontSize: 30,
-        color: '#ffffff',
+        color: '#83cfe3',
         marginBottom: 65,
     },
     input: {
@@ -132,7 +152,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#555',
         borderRadius: 10,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#f9f9f9',
         textAlign: 'center',
         fontSize: 20,
         marginBottom: 10,
