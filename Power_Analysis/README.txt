@@ -1,6 +1,6 @@
 #######################################################################
 Created: December 21st, 2021
-Last updated: Feb 24, 2022
+Last updated: Mar 10, 2022
 #######################################################################
 
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
@@ -93,6 +93,12 @@ def check_pwd_validity(passwd)
     - Should have at least one uppercase and one lowercase character.
     - Should have at least one special symbol (@$!%*#?&).
     - Should be between 5 to 15 characters long.
+
+def fetch_power_data(collection, usr_id, dir_id):
+- dir_id: the id in the Google Drive at which the photos stored
+- Should be called each time during the login of a user
+- Fetch all the images from the Google Drive, use OCR to read the data and then delete
+- Check if the readings are legal and then store them in the database
 
 *** to do ***
 

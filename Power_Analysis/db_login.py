@@ -3,6 +3,9 @@ from pymongo import MongoClient
 import pprint
 from datetime import datetime
 import re
+import OCR.power_record as record
+import os
+import copy
 
 # connect with the client host
 # setup a database with db_name and start a new table with tab_name
@@ -135,3 +138,180 @@ def check_pwd_validity(passwd):
         return True
     else:
         return False
+
+def fetch_power_data(collection, usr_id, dir_id):
+    # read the images from the database and return the power readings
+    date, reading = record.record_power(dir_id=dir_id)
+
+    # store the readings into the databasae
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    if len(reading) != len(date):
+        print("Unmatched input sizes")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+    curr_reading = res["readings"]
+    curr_dates = res["datetime"]
+
+    last_reading = curr_reading[-1]
+    max_inc = 0
+
+    for idx in range(1, len(curr_reading)):
+        max_inc = max(max_inc, curr_reading[idx] - curr_reading[idx-1])
+    # check if the new readings are legal
+    dates,readings = is_reading_legal(date=date, reading=reading, last_reading=last_reading, max_inc=max_inc)
+
+    if len(dates) == 0:
+        return -1
+
+    max_key = int(max(curr_reading, key=curr_reading.get)) + 1
+
+    for itr in range(len(readings)):
+        temp_r = {str(max_key): readings[itr]}
+        temp_d = {str(max_key): dates[itr]}
+
+        curr_reading.update(temp_r)
+        curr_dates.update(temp_d)
+        max_key += 1
+
+    collection.find_one_and_update({'_id':usr_id},{'$set':{'readings':curr_reading}})
+    collection.find_one_and_update({'_id': usr_id}, {'$set': {'datetime': curr_dates}})
+    return 1
+
+def is_reading_legal(date, reading, last_reading, max_inc):
+    leng = len(date)
+
+    if leng == 0:
+        return date, reading
+    elif leng == 1:
+        if reading[0] < last_reading:
+            return [], []
+        elif reading[0] == last_reading:
+            return date, reading
+        else: # leng > last_reading
+            if reading[0] - last_reading >= 3 * max_inc:
+                return [], []
+            else:
+                return date, reading
+    elif leng == 2:
+        if reading[0] == reading[1]:
+            if reading[0] < last_reading:
+                return [], []
+            elif reading[0] == last_reading:
+                return date, reading
+            else:  # leng > last_reading
+                if reading[0] - last_reading >= 3 * max_inc:
+                    return [], []
+                else:
+                    return date, reading
+        elif reading[0] < reading[1]:
+            if reading[0] < last_reading:
+                if reading[1] - last_reading < 3 * max_inc:
+                    return date[1], reading[1]
+                else:
+                    return [], []
+            elif reading[0] == last_reading:
+                if reading[1] - reading[0] < 3 * max_inc:
+                    return date, reading
+                else:
+                    return date[0], reading[0]
+            else:  # reading[0] > last_reading
+                if reading[0] - last_reading >= 3 * max_inc:
+                    return [], []
+                else:
+                    return date[0], reading[0]
+        else: # reading[0] > reading[1]
+            if reading[1] < last_reading:
+                return [], []
+            elif reading[1] == last_reading:
+                return date, reading
+            else:  # leng > last_reading
+                if reading[1] - last_reading >= 3 * max_inc:
+                    return [], []
+                else:
+                    return date, reading
+
+    # sliding window of size 3
+    # at least 2 out of 3 should be identical
+    next_last_reading = copy.deepcopy(reading[0])
+    i = 1
+    while i in range(1, len(reading) - 1):
+        print(reading)
+        next_last_reading = copy.deepcopy(reading[i])
+        if reading[i-1] == reading[i] and reading[i] == reading[i+1]:
+            last_reading = copy.deepcopy(next_last_reading)
+            if i + 1 > len(reading) - 2:
+                break
+            i = i + 1
+            continue
+        elif reading[i - 1] == reading[i]:
+            if reading[i+1] < reading[i]:
+                reading.pop(i + 1)
+                date.pop(i + 1)
+        elif reading[i] == reading[i + 1]:
+            if reading[i-1] > reading[i]:
+                reading.pop(i - 1)
+                date.pop(i - 1)
+        elif i == 1 and reading[i-1] == last_reading:
+            if reading[i] == reading[i + 1]:
+                last_reading = copy.deepcopy(next_last_reading)
+                if i + 1 > len(reading) - 2:
+                    break
+                i = i + 1
+                continue
+            else:
+                pop_idx = []
+                if reading[i + 1] < reading[i - 1]:
+                    if i+1 not in pop_idx:
+                        pop_idx.append(i + 1)
+
+                if reading[i] < reading[i - 1]:
+                    if i not in pop_idx:
+                        next_last_reading = copy.deepcopy(reading[i - 1])
+                        pop_idx.append(i)
+                elif reading[i] > reading[i + 1]:
+                    if i not in pop_idx:
+                        next_last_reading = copy.deepcopy(reading[i - 1])
+                        pop_idx.append(i)
+                else:
+                    if i+1 not in pop_idx:
+                        pop_idx.append(i + 1)
+
+                pop_idx.sort()
+                pop_idx.reverse()
+                for idx in pop_idx:
+                    reading.pop(idx)
+                    date.pop(idx)
+        else: # all different, leave the smallest difference one
+            diff, diff_idx = float("inf"), -1
+            for idx in range(i-1, i+2):
+                if reading[idx] - last_reading >= 0 and reading[idx] - last_reading < diff:
+                    diff_idx = idx
+                    diff = reading[idx] - last_reading
+
+            if diff_idx != i + 1:
+                reading.pop(i + 1)
+                date.pop(i + 1)
+
+            if diff_idx != i:
+                next_last_reading = copy.deepcopy(reading[i - 1])
+                reading.pop(i)
+                date.pop(i)
+
+            if diff_idx != i - 1:
+                reading.pop(i - 1)
+                date.pop(i - 1)
+
+        last_reading = copy.deepcopy(next_last_reading)
+        print("Last reading:", last_reading)
+
+        if i + 1 > len(reading) - 2:
+            break
+        i = i + 1
+
+    return date, reading
+
+#print(is_reading_legal(['xx', 'yy', 'zz', 'kk', 'ff'], [1, 0, 3, 8, 0], last_reading=1, max_inc=1))
