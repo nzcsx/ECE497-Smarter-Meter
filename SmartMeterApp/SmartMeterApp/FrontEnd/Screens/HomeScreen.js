@@ -25,21 +25,51 @@ export default function Home({ navigation, route }) {
             />
         </View>
             <Text style={[
-                GlobalStyle.CustomFont,
                 styles.text
             ]}>
-                Report is here!
+                Your consumption:
             </Text>
             <Image
                 style={styles.logo}
                 source={require('../../assets/report/local_report.jpg')}
             />
             <Text style={[
-                GlobalStyle.CustomFont,
                 styles.text
             ]}>
-                Home Screen
+                Report Selection
             </Text>
+            <View style={{ flexDirection:"row" }}>
+                <View style={styles.buttonStyle}>
+                    <CustomButton
+                        title='Temporal'
+                        color='#133bbe'
+                        
+                    /> 
+                </View>
+                <View style={styles.buttonStyle}>
+                    <CustomButton
+                        title='Spatial'
+                        color='#1338ee'
+                        
+                    /> 
+                </View>
+            </View>
+            <View style={{ flexDirection:"row" }}>
+                <View style={styles.buttonStyle}>
+                    <CustomButton
+                        title='My Bill'
+                        color='#13adbe'
+                        
+                    /> 
+                </View>
+                <View style={styles.buttonStyle}>
+                    <CustomButton
+                        title='My report'
+                        color='#13afee'
+                        
+                    /> 
+                </View>
+            </View>
         </View>
     )
 }
