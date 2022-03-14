@@ -36,23 +36,23 @@ def line_plot(date, power, usr_id, title):
     plt.tight_layout()
 
     plt.gcf().autofmt_xdate()
-    path = "saved_file/temporal" + str(usr_id) + ".png"
+    path = "/Users/dongxuening/Desktop/SmartMeterApp_combined/assets/report/temporal" + str(usr_id) + ".png"
     plt.savefig(path)
-    drive = connect()
-    dir_id = "14GouHLUpFsIe9GP5Wcg2nIjXfJcmXoeK"
+    # drive = connect()
+    # dir_id = "14GouHLUpFsIe9GP5Wcg2nIjXfJcmXoeK"
+    #
+    # dir_local = 'saved_file/'
+    # # upload these photo to google drive
+    # filenames_local = os.listdir(dir_local)
+    # for filename_local in filenames_local:
+    #     print(filename_local)
+    #     file_drive = drive.CreateFile({'parents': [{'id': dir_id}]})
+    #     file_drive['title'] = filename_local
+    #     file_drive.SetContentFile(os.path.join(dir_local, filename_local))
+    #     file_drive.Upload()
+    #     os.remove(os.path.join(dir_local, filename_local))
 
-    dir_local = 'saved_file/'
-    # upload these photo to google drive
-    filenames_local = os.listdir(dir_local)
-    for filename_local in filenames_local:
-        print(filename_local)
-        file_drive = drive.CreateFile({'parents': [{'id': dir_id}]})
-        file_drive['title'] = filename_local
-        file_drive.SetContentFile(os.path.join(dir_local, filename_local))
-        file_drive.Upload()
-        os.remove(os.path.join(dir_local, filename_local))
-
-    plt.show()
+    # plt.show()
 
 def pie_plot(labels, data, usr_id, title, colors = None):
     fig = plt.figure()
@@ -63,21 +63,21 @@ def pie_plot(labels, data, usr_id, title, colors = None):
     ax.axis('equal')
 
     ax.pie(data, labels=labels, autopct='%1.2f%%', colors=colors)
-    plt.savefig("saved_file/spatial" + str(usr_id) + ".png")
-    drive = connect()
-    dir_id = "14GouHLUpFsIe9GP5Wcg2nIjXfJcmXoeK"
-
-    dir_local = 'saved_file/'
-    # upload these photo to google drive
-    filenames_local = os.listdir(dir_local)
-    for filename_local in filenames_local:
-        print(filename_local)
-        file_drive = drive.CreateFile({'parents': [{'id': dir_id}]})
-        file_drive['title'] = filename_local
-        file_drive.SetContentFile(os.path.join(dir_local, filename_local))
-        file_drive.Upload()
-        os.remove(os.path.join(dir_local, filename_local))
-    plt.show()
+    plt.savefig("/Users/dongxuening/Desktop/SmartMeterApp_combined/assets/report/spatial" + str(usr_id) + ".png")
+    # drive = connect()
+    # dir_id = "14GouHLUpFsIe9GP5Wcg2nIjXfJcmXoeK"
+    #
+    # dir_local = 'saved_file/'
+    # # upload these photo to google drive
+    # filenames_local = os.listdir(dir_local)
+    # for filename_local in filenames_local:
+    #     print(filename_local)
+    #     file_drive = drive.CreateFile({'parents': [{'id': dir_id}]})
+    #     file_drive['title'] = filename_local
+    #     file_drive.SetContentFile(os.path.join(dir_local, filename_local))
+    #     file_drive.Upload()
+    #     os.remove(os.path.join(dir_local, filename_local))
+    # plt.show()
 
 def bar_plot(labels, data, usr_id, title, xlabel ="", ylabel = "", colors = None):
     fig, ax = plt.subplots()
@@ -90,18 +90,18 @@ def bar_plot(labels, data, usr_id, title, xlabel ="", ylabel = "", colors = None
     ax.set_ylabel(xlabel)
     ax.set_ylabel(ylabel)
     fig.tight_layout()
-    plt.savefig("saved_file/bill" + str(usr_id) + ".png")
-    drive = connect()
-    dir_id = "14GouHLUpFsIe9GP5Wcg2nIjXfJcmXoeK"
-
-    dir_local = 'saved_file/'
-    # upload these photo to google drive
-    filenames_local = os.listdir(dir_local)
-    for filename_local in filenames_local:
-        print(filename_local)
-        file_drive = drive.CreateFile({'parents': [{'id': dir_id}]})
-        file_drive['title'] = filename_local
-        file_drive.SetContentFile(os.path.join(dir_local, filename_local))
-        file_drive.Upload()
-        os.remove(os.path.join(dir_local, filename_local))
-    plt.show()
+    plt.savefig("/Users/dongxuening/Desktop/SmartMeterApp_combined/assets/report/bill" + str(usr_id) + ".png")
+    # drive = connect()
+    # dir_id = "14GouHLUpFsIe9GP5Wcg2nIjXfJcmXoeK"
+    #
+    # dir_local = 'saved_file/'
+    # # upload these photo to google drive
+    # filenames_local = os.listdir(dir_local)
+    # for filename_local in filenames_local:
+    #     print(filename_local)
+    #     file_drive = drive.CreateFile({'parents': [{'id': dir_id}]})
+    #     file_drive['title'] = filename_local
+    #     file_drive.SetContentFile(os.path.join(dir_local, filename_local))
+    #     file_drive.Upload()
+    #     os.remove(os.path.join(dir_local, filename_local))
+    # plt.show()

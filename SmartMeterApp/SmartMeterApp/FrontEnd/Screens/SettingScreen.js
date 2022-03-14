@@ -42,11 +42,12 @@ import {userReducer} from '../Redux/reducers'
  class SettingsScreen extends Component {
     constructor(props){
         super(props);
+        next_source = require('../../assets/icon/night.png');
         this.onValueChange = this.onValueChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.state = {switchValue: false, loggedIn: false, 
             name:this.props.name, password:"",data: '', 
-            bkg_colour:"#EFEFF4", bar_colour:'#ffffff', language:'English'};
+            bkg_colour:"#EFEFF4", bar_colour:'#ffffff', language:'English', img_source: next_source};
         
     }
 
@@ -119,7 +120,7 @@ import {userReducer} from '../Redux/reducers'
                     onPress={() => { this.props.navigation.navigate('SurveyScreen') }}
                 />
                 <SettingsList.Item
-                    icon={<Image style={styles.imageStyle} source={require('../../assets/icon/night.png')}/>}
+                    icon={<Image style={styles.imageStyle} source={this.state.img_source}/>}
                     title='Night Mode'
                     hasSwitch={true}
                     switchState={this.state.switchValue}
@@ -191,12 +192,16 @@ import {userReducer} from '../Redux/reducers'
             if (value == 1)
             {
                 this.setState({bkg_colour: '#181818'});
-                this.setState({bar_colour:'#7d7d7d'})
+                this.setState({bar_colour:'#7d7d7d'});
+                next_source = require('../../assets/icon/day.png');
+                this.setState({img_source: next_source});
             }
             else
             {
                 this.setState({bkg_colour: '#EFEFF4'});
-                this.setState({bar_colour:'#ffffff'})
+                this.setState({bar_colour:'#ffffff'});
+                next_source = require('../../assets/icon/night.png');
+                this.setState({img_source: next_source});
             }
             
         }

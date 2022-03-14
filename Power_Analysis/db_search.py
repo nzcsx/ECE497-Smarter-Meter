@@ -145,3 +145,15 @@ def search_last_update(collection, usr_id, return_string = True):
         return res["datetime"][max_key]
     else:
         return datetime.strptime(res["datetime"][max_key], "%b-%d-%Y %H:%M:%S")
+
+def search_last_login(collection, usr_id, return_string = True):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+
+    if return_string:
+        return res["last_login_date"]
+    else:
+        return datetime.strptime(res["last_login_date"], "%b-%d-%Y %H:%M:%S")

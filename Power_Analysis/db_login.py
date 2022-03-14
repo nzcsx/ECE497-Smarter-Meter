@@ -91,7 +91,7 @@ def remove_connection(client):
 def check_pwd(collection, usr_id, pwd):
     if collection.count_documents({'_id': usr_id}) == 0:
         print("Unable to find the specified user")
-        return -1
+        return False
 
     res = collection.find_one({'_id': usr_id})
     if pwd == res['password']:

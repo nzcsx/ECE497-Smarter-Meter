@@ -5,14 +5,14 @@ const styles = StyleSheet.create({
   bigBlack: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 19,
     backgroundColor: '#EFEFF4',
     alignItems: "center" ,
     justifyContent: "center",
   },
   smallBlack: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 15,
     backgroundColor: '#EFEFF4',
     alignItems: "center" ,
     justifyContent: "center",
@@ -49,10 +49,19 @@ class HttpExample extends Component {
       return (
          <View style={{justifyContent: "center", alignItems: "center", flex: 1}}>
             <Text style={styles.bigBlack}>
+               User name: {this.state.data.name}, UID: {this.state.data.id}
+            </Text>
+            <Text style={styles.bigBlack}>
                Your appliance information:
             </Text>
-            <Text style={styles.bigBlue}>
+            <Text style={styles.smallBlack}>
                {this.state.data.appliance}
+            </Text>
+            <Text style={styles.smallBlack}>
+               Your last data update time: {this.state.data.lastupdate}
+            </Text>
+            <Text style={styles.smallBlack}>
+               Your last data login time: {this.state.data.lastlogin}
             </Text>
          </View>
       )

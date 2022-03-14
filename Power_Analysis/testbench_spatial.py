@@ -4,6 +4,7 @@ import Power_Analysis.db_update as update
 import Power_Analysis.analysis as anal
 import Power_Analysis.spatial as space
 import Power_Analysis.plot as plot
+import Power_Analysis.bill as money
 from datetime import datetime
 
 client, db, tab = login.connect_host("Power", "user_info")

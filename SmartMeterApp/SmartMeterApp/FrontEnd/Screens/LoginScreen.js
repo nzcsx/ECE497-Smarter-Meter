@@ -26,11 +26,46 @@ export default function Login({ navigation }) {
 
     const {name,password} = useSelector(state=>state.userReducer);
     const dispatch = useDispatch();
+    verification = '';
 
     useEffect(() => {
         createTable();
         getData();
     }, []);
+
+    const check_login = () => {
+        const info = 'uname='+name+'&password='+password;
+        console.log(info);
+
+        fetch("http://127.0.0.1:5000/login", {method: "POST",
+            body: info, 
+            header: {
+                'Content-Type': 'application/json'
+              } // <-- Post parameters        
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+           console.log(responseJson);
+        //    this.setState({
+        //       data: responseJson
+        //    })
+            verification = responseJson.valid;
+
+            if (verification == "True")
+            {
+                navigation.navigate('NestedHome', { screen: 'Home' });
+            }
+            else
+            {
+                Alert.alert("Unable to find user name or password in database.");
+                navigation.navigate('Login');
+            }
+        })
+        .catch((error) => {
+           console.error(error);
+        });
+        
+   }
 
     const createTable = () => {
         db.transaction((tx) => {
@@ -76,7 +111,7 @@ export default function Login({ navigation }) {
                         [name, password]
                     );
                 })
-                navigation.navigate('NestedHome', { screen: 'Home' });
+                //navigation.navigate('NestedHome', { screen: 'Home' });
             } catch (error) {
                 console.log(error);
             }
@@ -111,7 +146,7 @@ export default function Login({ navigation }) {
             <CustomButton
                 title='Login'
                 color='#83cfe3'
-                onPressFunction={setData}
+                onPressFunction={check_login}
             />
         </View>
     )
