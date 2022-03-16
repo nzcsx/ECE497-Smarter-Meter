@@ -1,6 +1,6 @@
 #######################################################################
 Created: December 21st, 2021
-Last updated: Mar 10, 2022
+Last updated: Mar 16, 2022
 #######################################################################
 
 MacOS Catalina: Cannot use the MongoDB Community version 5.0
@@ -131,6 +131,9 @@ def print_appliance_info(db, collection, usr_id)
 def search_appliance_list(db, collection, usr_id)
 - Get all appliance infomation in an array
 - return format: [[appliance, wattage, quantity, usage frequency],...] -> [[string, int/float, int, string],...]
+
+def search_family_info(collection, usr_id)
+- return the family size of the user
 
 def search_power_reading_all(collection, usr_id, return_string = True)
 - return all power meter readings

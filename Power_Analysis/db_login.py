@@ -183,6 +183,7 @@ def fetch_power_data(collection, usr_id, dir_id):
 
 def is_reading_legal(date, reading, last_reading, max_inc):
     leng = len(date)
+    storage = copy.deepcopy(last_reading)
 
     if leng == 0:
         return date, reading
@@ -312,6 +313,57 @@ def is_reading_legal(date, reading, last_reading, max_inc):
             break
         i = i + 1
 
-    return date, reading
+    leng = len(date)
+    last_reading = storage
 
-#print(is_reading_legal(['xx', 'yy', 'zz', 'kk', 'ff'], [1, 0, 3, 8, 0], last_reading=1, max_inc=1))
+    if leng == 0:
+        return date, reading
+    elif leng == 1:
+        if reading[0] < last_reading:
+            return [], []
+        elif reading[0] == last_reading:
+            return date, reading
+        else:  # leng > last_reading
+            if reading[0] - last_reading >= 3 * max_inc:
+                return [], []
+            else:
+                return date, reading
+    elif leng == 2:
+        if reading[0] == reading[1]:
+            if reading[0] < last_reading:
+                return [], []
+            elif reading[0] == last_reading:
+                return date, reading
+            else:  # leng > last_reading
+                if reading[0] - last_reading >= 3 * max_inc:
+                    return [], []
+                else:
+                    return date, reading
+        elif reading[0] < reading[1]:
+            if reading[0] < last_reading:
+                if reading[1] - last_reading < 3 * max_inc:
+                    return date[1], reading[1]
+                else:
+                    return [], []
+            elif reading[0] == last_reading:
+                if reading[1] - reading[0] < 3 * max_inc:
+                    return date, reading
+                else:
+                    return date[0], reading[0]
+            else:  # reading[0] > last_reading
+                if reading[0] - last_reading >= 3 * max_inc:
+                    return [], []
+                else:
+                    return date[0], reading[0]
+        else:  # reading[0] > reading[1]
+            if reading[1] < last_reading:
+                return [], []
+            elif reading[1] == last_reading:
+                return date, reading
+            else:  # leng > last_reading
+                if reading[1] - last_reading >= 3 * max_inc:
+                    return [], []
+                else:
+                    return date, reading
+
+    return date, reading

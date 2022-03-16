@@ -52,6 +52,17 @@ def print_appliance_info(db, collection, usr_id):
         print(doc["quantity"], "appliance of name", doc["appliance"],"working at",doc["wattage"],
               "Watts", "|Using frequency", doc["usage_freq"])
 
+# Return the family size of a specific user
+def search_family_info(collection, usr_id):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+    f_size = res['family_size']
+
+    return f_size
+
 # Look for all power meter readings in the database
 def search_power_reading_all(collection, usr_id):
     if collection.count_documents({'_id': usr_id}) == 0:
