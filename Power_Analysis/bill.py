@@ -116,7 +116,7 @@ class bill():
 
             # get a list of dates and the corresponding minutes in the date where the period covers
             date_list, mins_list = self.gen_date_list(max_d = curr_date, min_d = prev_date)
-
+            print("mins_list:", mins_list, "p_min:", p_min)
             for id, d in enumerate(date_list):
 
                 # update the total power consumption per day
@@ -139,14 +139,14 @@ class bill():
                 else: #non-weekend
                     if mins_list[id] == 24 * 60: # whole day
                         if d in self.power_calendar_divided:
-                            self.power_calendar_divided[d]["off_peak"] += p_min * 12 * 60
-                            self.power_calendar_divided[d]["on_peak"] += p_min * 6 * 60
-                            self.power_calendar_divided[d]["mid_peak"] += p_min * 6 * 60
+                            self.power_calendar_divided[d]["off_peak"] = p_min * 12 * 60
+                            self.power_calendar_divided[d]["on_peak"] = p_min * 6 * 60
+                            self.power_calendar_divided[d]["mid_peak"] = p_min * 6 * 60
                         else:
                             self.power_calendar_divided.update(
-                                {d: {"off_peak": round(0.1 * 12 * 60),
-                                     "on_peak": round(0.1 * 6 * 60),
-                                     "mid_peak": round(0.1 * 6 * 60)}})
+                                {d: {"off_peak": round(p_min * 12 * 60, 3),
+                                     "on_peak": round(p_min * 6 * 60, 3),
+                                     "mid_peak": round(p_min * 6 * 60, 3)}})
                     else: # non-whole day
                         if id == 0: # first day
                             begin = prev_date

@@ -60,6 +60,9 @@ update.add_power_reading(tab,1,readings = ["589"],dates = ["Jan-12-2022 22:13:24
 
 bill = money.estimate_bill_period(collection=tab, usr_id=1, min_date = 'Jan-05-2022 6:50:12', max_date = "Jan-10-2022 18:14:00")
 
+print(bill.dates)
+print(bill.usr_id)
+print(bill.power)
 print(bill.power_calendar)
 print(bill.power_calendar_divided)
 print(bill.price_calendar)

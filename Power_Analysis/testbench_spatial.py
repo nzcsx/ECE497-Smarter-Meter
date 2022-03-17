@@ -6,6 +6,7 @@ import Power_Analysis.spatial as space
 import Power_Analysis.plot as plot
 import Power_Analysis.bill as money
 from datetime import datetime
+import numpy as np
 
 client, db, tab = login.connect_host("Power", "user_info")
 login.remove_collection(db["user_1"])
@@ -59,7 +60,10 @@ search.print_collection(tab)
 names, hrs, consumption = space.spatial_itertool(db = db, collection = tab, usr_id = 1,
                        min_date = 'Dec-29-2021 12:50:12', max_date = "Jan-10-2022 22:13:25")
 print(names, hrs)
-plot.pie_plot(labels=names, data=hrs, usr_id=1, title="Spatial time breakdown", colors=['#BDC7D3', '#D9CDC1','#E4E1D0'])
+print(consumption)
+
+print(np.dot(hrs, [600, 0.1, 0.2, 1]))
+#plot.pie_plot(labels=names, data=hrs, usr_id=1, title="Spatial time breakdown", colors=['#BDC7D3', '#D9CDC1','#E4E1D0'])
 #plot.pie_plot(labels=names, data=consumption, usr_id=1, title="Spatial power breakdown")
 
 login.remove_user(db, tab,1)
