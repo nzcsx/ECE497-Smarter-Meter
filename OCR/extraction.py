@@ -8,6 +8,7 @@ from skimage.measure import label, regionprops
 import glob
 import utils
 # from utils.homofilt import HomomorphicFilter
+import matplotlib.pyplot as plt
 
 import skimage.filters as ft
 
@@ -102,7 +103,6 @@ class frameExtractor:
         gamma = frameExtractor.adjust_gamma(blurred, gamma=0.7)
         shapeMask = cv2.threshold(gamma, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
         # shapeMask = gamma
-        # cv2_imshow(shapeMask)
         # Step 2: extract regions of "interest".
         label_image = label(shapeMask)
 
@@ -112,7 +112,9 @@ class frameExtractor:
         for region in regionprops(label_image):
             # Step 3: heuristic to find a region large enough, in the center & with length along x-axis > length along y-axis.
             minr, minc, maxr, maxc = region.bbox
+
             c = np.array([[minc, minr], [minc, maxr], [maxc, minr], [maxc, maxr]])
+            # print(c)
 
             if Cnt is None:
                 Cnt = c
@@ -141,9 +143,11 @@ class frameExtractor:
             # Crop the image around the region of interest (but keep a bit of distance with a 30px padding).
             # Darken + Binary threshold + rectangle detection.
             # If this technique fails, raise an error and use basic methods (except part).
+            # crop_img = self.image[max(0, position[0] - 30):min(position[2] + 30, self.image.shape[0]),\
+            # max(0, position[1] - 30):min(self.image.shape[1], position[3] + 30)]
 
-            crop_img = self.image[max(0, position[0] - 30):min(position[2] + 30, self.image.shape[0]), \
-                       max(0, position[1] - 30):min(self.image.shape[1], position[3] + 30)]
+            crop_img = self.image[max(0, position[0] - 27):min(position[2] + 27, self.image.shape[0]), \
+                       max(0, position[1] - 27):min(self.image.shape[1], position[3] + 27)]
 
             crop_blurred = cv2.GaussianBlur(crop_img, (5, 5), 0)
             crop_gamma = frameExtractor.adjust_gamma(crop_blurred, gamma=0.4)
@@ -189,9 +193,16 @@ class frameExtractor:
 
             persp = cv2.getPerspectiveTransform(src_pts, dst_pts)
             warped = cv2.warpPerspective(gray, persp, (400, 100))
-        # Frame is extracted from the initial image in grayscale (not other processing done on the image).
-        self.raw_frame = warped
 
+            # cv2.imshow("warped",warped)
+            # # waits for user to press any key
+            # # (this is necessary to avoid Python kernel form crashing)
+            # cv2.waitKey(0)
+            #
+            # # closing all open windows
+            # cv2.destroyAllWindows()
+            # Frame is extracted from the initial image in grayscale (not other processing done on the image).
+        self.raw_frame = warped
 
     """
     http://www.amphident.de/en/blog/preprocessing-for-automatic-pattern-identification-in-wildlife-removing-glare.html
@@ -237,42 +248,10 @@ class frameExtractor:
         self.frameDetection()
         self.preprocessFrame()
         self.sliceFrame()
+        # cv2_imshow(self.image)
         cv2.imwrite(self.dst_file_name, self.sliced_frame)
-        cv2.imshow(self.sliced_frame)
         if self.return_image:
             return self.sliced_frame
         else:
             return
 
-
-# --------------------- End of the class -----------------------------------
-
-
-"""
-A main function to preprocess all the images.
-"""
-
-if __name__ == "__main__":
-
-    if os.path.exists('Datasets_frames/'):
-        shutil.rmtree('Datasets_frames/')
-        os.makedirs('Datasets_frames/')
-    else:
-        os.makedirs('Datasets_frames/')
-
-    fail = [0, 0, 0]
-
-    # for file in glob.glob('/content/456.jpg'):
-    for file in glob.glob('/content/gdrive/MyDrive/img/img1.jpg'):
-        try:
-            f = frameExtractor(image=None,
-                               src_file_name=file,
-                               dst_file_name='Datasets_frames/' + str(file).split('/')[-1],
-                               return_image=False,
-                               output_shape=(400, 100))
-            f.extractAndSaveFrame()
-
-        except:
-            fail[0] += 1
-
-    print(fail)

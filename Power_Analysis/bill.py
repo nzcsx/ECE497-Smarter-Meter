@@ -33,6 +33,7 @@ class bill():
         self.price_calendar_divided = {}
 
         self.hours_divided = [0, 0, 0] # Unit in kWh
+        self.price_divided = [0, 0, 0]
 
         self.total_bill = 0
 
@@ -97,6 +98,14 @@ class bill():
             res[0] = 12 * 60 - res[0]
             res[1] = 6 * 60 - res[1]
             res[2] = 6 * 60 - res[2]
+
+        # determine if it is within the winter period
+        date_curr = datetime.strptime((date.split("-")[0] + "-" + date.split("-")[1]), "%b-%d")
+        winter_begin, winter_end = datetime.strptime(("Nov-01"), "%b-%d"), datetime.strptime(("Apr-30"), "%b-%d")
+        if date_curr > winter_begin or date_curr < winter_end:
+            temp = copy.deepcopy(res[-1])
+            res[1] = res[-1]
+            res[-1] = temp
         return res
 
     def count_mins(self):
@@ -173,6 +182,13 @@ class bill():
             self.hours_divided[1] += self.power_calendar_divided[key]['on_peak']/1000
             self.hours_divided[2] += self.power_calendar_divided[key]['mid_peak']/1000
 
+    def collect_divided_price(self):
+        print(self.price_calendar_divided)
+        for key in self.price_calendar_divided.keys():
+            self.price_divided[0] += self.price_calendar_divided[key]['off_peak']
+            self.price_divided[1] += self.price_calendar_divided[key]['on_peak']
+            self.price_divided[2] += self.price_calendar_divided[key]['mid_peak']
+
     # calculate the money spent according to the power consumption
     def calculate_bill(self):
         self.count_mins()
@@ -192,17 +208,18 @@ class bill():
             self.price_calendar_divided.update({date:price_list})
             self.total_bill += total
 
-            self.collect_divided_hours()
+        self.collect_divided_hours()
+        self.collect_divided_price()
 
     # update the price if needed
     def update_price(self, on  = None, off = None, mid = None):
-        if on != None:
+        if on is not None:
             self.price_on_peak = on
 
-        if off != None:
+        if off is not None:
             self.price_off_peak =  off
 
-        if mid != None:
+        if mid is not None:
             self.price_mid_peak = mid
 
 # estimate the bill payment over a month

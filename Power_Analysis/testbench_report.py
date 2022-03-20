@@ -21,7 +21,7 @@ user_info = {
         "appliance": [["fridge", 600, 1, "all day"],
                       ["laptop", 0.1, 1, "often"],
                       ["lamp", 0.2, 1, "often"],
-                      ["oven", 1, 1, "rare"]], #"all day", "often", "rare", "not in use"
+                      ["ac", 1, 1, "rare"]], #"all day", "often", "rare", "not in use"
         "password": "yes",
         "reset_Q": "My name?",
         "reset_A": "Default"

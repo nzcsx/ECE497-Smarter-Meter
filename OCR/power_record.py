@@ -46,14 +46,50 @@ class ANNClassifier(nn.Module):
         x = self.fc2(x)
         return x
 
+#Artifical Neural Network Architecture
+class ANNClassifierv4(nn.Module):
+    def __init__(self):
+        super(ANNClassifierv4, self).__init__()
+        self.fc1 = nn.Linear(256 * 4 * 7, 1024)
+        self.fc2 = nn.Linear(1024, 256)
+        self.fc3 = nn.Linear(256, 64)
+        self.fc4 = nn.Linear(64, 10)
+
+    def forward(self, x):
+        x = x.view(-1, 256 * 4 * 7) #flatten feature data
+        x = F.relu(self.fc1(x))
+        x = F.leaky_relu(self.fc2(x))
+        x = F.leaky_relu(self.fc3(x))
+        x = self.fc4(x)
+        return x
+
+#Artifical Neural Network Architecture
+class ANNClassifierv5(nn.Module):
+    def __init__(self):
+        super(ANNClassifierv5, self).__init__()
+        self.fc1 = nn.Linear(256 * 4 * 7, 512)
+        self.fc2 = nn.Linear(512, 128)
+        self.fc3 = nn.Linear(128, 32)
+        self.fc4 = nn.Linear(32, 10)
+
+    def forward(self, x):
+        x = x.view(-1, 256 * 4 * 7) #flatten feature data
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.leaky_relu(self.fc3(x))
+        x = self.fc4(x)
+        return x
 
 def OCR(img_path):
     print("Original Image: ")
     device = torch.device('cpu')
     img = Image.open(img_path)
     # img = img.rotate(270)
+    img = img.crop((400, 200, 900, 650))
     plt.imshow(img)
-    #plt.show()
+    save_path = 'contents/data_cut.jpg'
+    img.save(save_path)
+    # plt.show()
     labels = ['10', '10', '10', '10', '10', '10']  # label 10 refers to unknown label
 
     if os.path.exists('Datasets_frames/'):
@@ -76,7 +112,7 @@ def OCR(img_path):
     print("Screen Extract:")
     save_name = None
     # Extract the screen
-    for file in glob.glob(img_path):
+    for file in glob.glob(save_path):
         try:
             f = extract.frameExtractor(image=None,
                                src_file_name=file,
@@ -109,7 +145,7 @@ def OCR(img_path):
         except:
             fail[1] += 1
 
-    model_path = "model_2.pth"
+    model_path = "/Users/dongxuening/Desktop/capstone_code/OCR/model_980_995-v5-leaky3.pth"
     transform = transforms.Compose([transforms.Resize((180, 256)),
                                     transforms.ToTensor()])
 
@@ -121,7 +157,7 @@ def OCR(img_path):
     alexNet = torchvision.models.alexnet(pretrained=True)
     ALNC = alexNet.features
 
-    model = ANNClassifier()
+    model = ANNClassifierv5()
     device = torch.device('cpu')
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.eval()
@@ -155,12 +191,13 @@ def get_readings(filenames):
 
 def record_power(dir_id):
     drive = load.connect()
-    DATA_SAVE_PATH = "/Users/dongxuening/Desktop/capstone_code/OCR/contents"
-    filename, img_path = load.download_images(drive=drive, dir_id=dir_id, save_path=DATA_SAVE_PATH)
+    DATA_SAVE_PATH = "contents"
+    filename, img_path = load.download_images(drive=drive, dir_id=dir_id, save_path=DATA_SAVE_PATH, delete=False)
 
     time, readings = [], []
     for file in filename:
-        name = str(filename).split(".")
+        name = str(file).split(".")
+        print(name)
         curr = datetime.strptime(name[0], "%Y_%m_%d-%H_%M_%S")
         time.append(curr.strftime('%b-%d-%Y %H:%M:%S'))
 
@@ -179,3 +216,5 @@ def record_power(dir_id):
     #     os.rmdir("/contents")
     #     print("removed:", "contents")
     return time, readings
+
+#print(record_power("1s1lpZeqlldYExhBcNcVJrDK6zZDvThCg"))

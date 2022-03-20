@@ -8,7 +8,7 @@ def connect():
     drive = GoogleDrive(gauth)  # Create GoogleDrive instance with authenticated GoogleAuth instance
     return drive
 
-def download_images(drive, dir_id, save_path):
+def download_images(drive, dir_id, save_path, delete = True):
     if not os.path.isdir(save_path):
         print("Path ", save_path, "has not formed")
         os.mkdir(save_path)
@@ -31,7 +31,17 @@ def download_images(drive, dir_id, save_path):
         img_paths.append(img_path)
         file.GetContentFile(img_path)  # Download file as 'catlove.png'.
 
+    if delete:
+        delete_images(drive, dir_id)
+
     return filenames, img_paths
+
+def delete_images(drive, dir_id):
+    request = "'" + dir_id + "' in parents and trashed=false"
+    # Auto-iterate through all files in the root folder.
+    file_list = drive.ListFile({'q': request}).GetList()
+    for file1 in file_list:
+        file1.Trash()
 
 def download_images_by_id(drive, file_id, save_path, filename):
     if not os.path.isdir(save_path):

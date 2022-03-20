@@ -21,6 +21,7 @@ class cutDigits:
             self.image = cv2.imread(src_file_name)
         else:
             self.image = image
+
         self.src_file_name = src_file_name
         self.dst_folder_name = dst_folder_name
         self.last_digit = last_digit
@@ -36,12 +37,18 @@ class cutDigits:
         """
 
         self.boxes = []
-        self.box_size = self.image.shape[1] / 6
+        self.box_size = 263 / 6  # self.image.shape[1]/6
+        # self.image = self.image[10:280, 18:42]
+
+        modified = False
 
         for i in range(self.last_digit):
-            inf = i * self.box_size
-            sup = (i + 1) * self.box_size
-            self.boxes += [self.image[:, int(inf):int(sup)]]
+            inf = i * self.box_size + 9
+            sup = (i + 1) * self.box_size + 9
+            self.boxes += [self.image[16:42, int(inf):int(sup)]]
+            # inf = i * self.box_size
+            # sup = (i+1) * self.box_size
+            # self.boxes += [self.image[:, int(inf):int(sup)]]
 
         return self.boxes
 

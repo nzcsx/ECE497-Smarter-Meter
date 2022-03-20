@@ -139,47 +139,7 @@ def check_pwd_validity(passwd):
     else:
         return False
 
-def fetch_power_data(collection, usr_id, dir_id):
-    # read the images from the database and return the power readings
-    date, reading = record.record_power(dir_id=dir_id)
 
-    # store the readings into the databasae
-    if collection.count_documents({'_id': usr_id}) == 0:
-        print("Unable to find the specified user")
-        return -1
-
-    if len(reading) != len(date):
-        print("Unmatched input sizes")
-        return -1
-
-    res = collection.find_one({'_id': usr_id})
-    curr_reading = res["readings"]
-    curr_dates = res["datetime"]
-
-    last_reading = curr_reading[-1]
-    max_inc = 0
-
-    for idx in range(1, len(curr_reading)):
-        max_inc = max(max_inc, curr_reading[idx] - curr_reading[idx-1])
-    # check if the new readings are legal
-    dates,readings = is_reading_legal(date=date, reading=reading, last_reading=last_reading, max_inc=max_inc)
-
-    if len(dates) == 0:
-        return -1
-
-    max_key = int(max(curr_reading, key=curr_reading.get)) + 1
-
-    for itr in range(len(readings)):
-        temp_r = {str(max_key): readings[itr]}
-        temp_d = {str(max_key): dates[itr]}
-
-        curr_reading.update(temp_r)
-        curr_dates.update(temp_d)
-        max_key += 1
-
-    collection.find_one_and_update({'_id':usr_id},{'$set':{'readings':curr_reading}})
-    collection.find_one_and_update({'_id': usr_id}, {'$set': {'datetime': curr_dates}})
-    return 1
 
 def is_reading_legal(date, reading, last_reading, max_inc):
     leng = len(date)
