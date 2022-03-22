@@ -67,6 +67,14 @@ export default function Login({ navigation }) {
         
    }
 
+   const registerUser = () => {
+        navigation.navigate('RegisterScreen');
+    }
+
+    const resetUser = () => {
+        navigation.navigate('ResetScreen');
+    }
+
     const createTable = () => {
         db.transaction((tx) => {
             tx.executeSql(
@@ -148,6 +156,22 @@ export default function Login({ navigation }) {
                 color='#83cfe3'
                 onPressFunction={check_login}
             />
+            <View style={{ flexDirection:"row" }}>
+                    <View style={styles.buttonStyle}>
+                        <CustomButton
+                            title='Forget Key'
+                            color='#83cfe3'
+                            onPressFunction={resetUser}
+                        /> 
+                    </View>
+                    <View style={styles.buttonStyle}>
+                        <CustomButton
+                            title='Register'
+                            color='#83cfe3'
+                            onPressFunction={registerUser}
+                        /> 
+                    </View>
+            </View>
         </View>
     )
 }

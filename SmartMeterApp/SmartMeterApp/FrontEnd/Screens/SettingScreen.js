@@ -26,7 +26,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  Alert,
 } from 'react-native';
 
 import SettingsList from 'react-native-settings-list';

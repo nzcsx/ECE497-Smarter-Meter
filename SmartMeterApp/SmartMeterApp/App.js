@@ -16,6 +16,8 @@ import Login from './FrontEnd/Screens/LoginScreen';
 import Home from './FrontEnd/Screens/HomeScreen';
 import InfoScreen from './FrontEnd/Screens/InfoScreen';
 import SurveyScreen from './FrontEnd/Screens/SurveyScreen';
+import RegisterScreen from './FrontEnd/Screens/RegisterScreen';
+import ResetScreen from './FrontEnd/Screens/ResetScreen';
 import { Provider } from 'react-redux';
 import { Store } from './FrontEnd/Redux/store';
 
@@ -121,6 +123,23 @@ function App() {
             }}
           />
 
+          <Stack.Screen
+            name="RegisterScreen"
+            component={RegisterScreen}
+            options={{
+              headerShown: false,
+              header: null,
+            }}
+          />
+
+          <Stack.Screen
+            name="ResetScreen"
+            component={ResetScreen}
+            options={{
+              headerShown: false,
+              header: null,
+            }}
+          />
 
         </Stack.Navigator>
       </NavigationContainer>
