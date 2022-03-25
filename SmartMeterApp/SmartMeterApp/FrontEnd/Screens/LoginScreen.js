@@ -149,6 +149,7 @@ export default function Login({ navigation }) {
             <TextInput
                 style={styles.input}
                 placeholder='Enter your password'
+                secureTextEntry={true}
                 onChangeText={(value) => dispatch(setPassword(value))}
             />
             <CustomButton

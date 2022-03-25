@@ -133,14 +133,16 @@ import {userReducer} from '../Redux/reducers'
                         <CustomButton
                             title='Temporal'
                             color='#133bbe'
-                            onPressFunction={this.request_report_temporal}
+                            //onPressFunction={this.request_report_temporal}
+                            onPressFunction={() => { this.props.navigation.navigate('TemporalScreen') }}
                         /> 
                     </View>
                     <View style={styles.buttonStyle}>
                         <CustomButton
                             title='Spatial'
                             color='#1338ee'
-                            onPressFunction={this.request_report_spatial}
+                            //onPressFunction={this.request_report_spatial}
+                            onPressFunction = {() => { this.props.navigation.navigate('SpatialScreen') }}
                         /> 
                     </View>
                 </View>
@@ -149,14 +151,15 @@ import {userReducer} from '../Redux/reducers'
                         <CustomButton
                             title='My Bill'
                             color='#13adbe'
-                            onPressFunction={this.request_report_bill}
+                            //onPressFunction={this.request_report_bill}
+                            onPressFunction = {() => { this.props.navigation.navigate('billScreen') }}
                         /> 
                     </View>
                     <View style={styles.buttonStyle}>
                         <CustomButton
                             title='My report'
                             color='#13afee'
-                            
+                            onPressFunction={() => { this.props.navigation.navigate('ReportScreen') }}
                         /> 
                     </View>
                 </View>

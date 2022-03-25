@@ -18,6 +18,10 @@ import InfoScreen from './FrontEnd/Screens/InfoScreen';
 import SurveyScreen from './FrontEnd/Screens/SurveyScreen';
 import RegisterScreen from './FrontEnd/Screens/RegisterScreen';
 import ResetScreen from './FrontEnd/Screens/ResetScreen';
+import ReportScreen from './FrontEnd/Screens/ReportScreen';
+import TemporalScreen from './FrontEnd/Screens/TemporalScreen';
+import SpatialScreen from './FrontEnd/Screens/SpatialScreen';
+import billScreen from './FrontEnd/Screens/billScreen';
 import { Provider } from 'react-redux';
 import { Store } from './FrontEnd/Redux/store';
 
@@ -59,6 +63,63 @@ function NestedSettings() {
   );
 }
 
+function NestedReport(){
+  return (
+    <Stack.Navigator
+          initialRouteName="NestedReport"
+          component={Home}
+          screenOptions={{
+            headerShown: false,
+            header: null,
+          }}
+        >
+        
+        <Tab.Screen
+        name="NestedReport"
+        headerShown="false"
+        component={Home}
+      />
+      <Stack.Screen
+        name="ReportScreen"
+        screenOptions={{
+          headerShown: false,
+          header: null,
+        }}
+        component={ReportScreen}
+      />
+
+      <Stack.Screen
+        name="TemporalScreen"
+        screenOptions={{
+          headerShown: false,
+          header: null,
+        }}
+        component={TemporalScreen}
+      />
+
+      <Stack.Screen
+        name="SpatialScreen"
+        screenOptions={{
+          headerShown: false,
+          header: null,
+        }}
+        component={SpatialScreen}
+      />
+
+    <Stack.Screen
+        name="billScreen"
+        screenOptions={{
+          headerShown: false,
+          header: null,
+        }}
+        component={billScreen}
+      />
+    
+      
+    </Stack.Navigator>
+  );
+}
+
 function NestedHome() {
   return (
     <Tab.Navigator >
@@ -69,7 +130,7 @@ function NestedHome() {
           headerShown: false,
           header: null,
         }}
-        component={Home}
+        component={NestedReport}
       />
       <Tab.Screen
         name="Settings"

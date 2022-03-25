@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Image,
   Alert,
-  Text
+  Text, ScrollView
 } from 'react-native'
 
 export default class RegisterScreen extends React.Component {
