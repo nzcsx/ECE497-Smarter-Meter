@@ -269,7 +269,14 @@ def send_power_reading():
     date_2 = datetime.strftime(max_date, "%b-%d-%Y")
     print("Gets:", date_1, date_2)
 
-    return jsonify({"readings": [820, 932, 901, 934, 1290, 1330, 1320]})
+    power, dates = search.search_power_reading_date(tab, uid,
+                                                    min_date=date_1 + ' 00:00:00', max_date=date_2 + " 23:59:59")
+    readings = []
+
+    for p in power:
+        readings.append(round(float(p), 3))
+
+    return jsonify({"readings": readings, "dates": dates})
 
 @app.route('/spatial', methods=['GET', 'POST'])
 def send_appliance_reading():
@@ -325,14 +332,50 @@ def send_bill_reading():
         dates.append(key)
     return jsonify({"values": res, "dates": dates})
 
+@app.route('/addAPP', methods=['GET', 'POST'])
+def add_appliance():
+    data = str(request.data)[2:-1]
+    print("Received content:", data)
+    print()
+
+    dates = data.split('&')
+    print(dates)
+    app = dates[0].split('=')[-1]
+    watt = float(dates[1].split('=')[-1])
+    num = int(dates[2].split('=')[-1])
+    freq = dates[3].split('=')[-1]
+
+    global new_appliance
+    new_appliance.append([app, watt, num, freq])
+    print(new_appliance)
+
+    uid = login.get_id_by_name(tab, curr_name)
+
+    return jsonify({"valid": "True"})
+
+@app.route('/confirmAPP', methods=['GET', 'POST'])
+def confirm_app():
+    uid = login.get_id_by_name(tab, curr_name)
+    global new_appliance
+    print(new_appliance)
+    update.update_appliance_info(db, tab, uid, new_appliance)
+    new_appliance = []
+    return jsonify({"valid": "True"})
+
+@app.route('/checkAPP', methods=['GET', 'POST'])
+def check_app():
+    print(new_appliance)
+    return jsonify({"data": str(new_appliance)})
+
 if __name__ == '__main__':
     now = datetime.now()
-    global client, db, tab
+    global client, db, tab, new_appliance
     client, db, tab = login.connect_host("Power", "user_info")
     #curr_name = ""
     login.remove_collection(db["user_1"])
     login.remove_collection(db["user_2"])
     login.remove_collection(tab)
+    new_appliance = []
 
     user_info = {
         # need to add more information here

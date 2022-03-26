@@ -58,6 +58,14 @@ function NestedSettings() {
         headerShown="false"
         component={SurveyScreen}
       />
+      <Stack.Screen
+            name="ResetScreen"
+            component={ResetScreen}
+            options={{
+              headerShown: false,
+              header: null,
+            }}
+          />
       
     </Stack.Navigator>
   );

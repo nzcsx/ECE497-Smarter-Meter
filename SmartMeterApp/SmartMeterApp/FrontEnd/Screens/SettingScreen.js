@@ -132,7 +132,7 @@ import {userReducer} from '../Redux/reducers'
                 <SettingsList.Item
                     icon={<Image style={styles.imageStyle} source={require('../../assets/icon/password.png')}/>}
                     title='Reset Password'
-                    onPress={() => Alert.alert('Route To Cellular Page')}
+                    onPress={() => { this.props.navigation.navigate('ResetScreen') }}
                     backgroundColor = {this.state.bar_colour}
                 />
                 {/* <SettingsList.Item

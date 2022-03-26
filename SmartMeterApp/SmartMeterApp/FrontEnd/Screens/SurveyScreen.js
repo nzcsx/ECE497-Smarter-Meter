@@ -1,148 +1,297 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, useEffect } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Alert,
-    TextInput,
-} from 'react-native';
-import CustomButton from '../Utils/CustomButton';
-import GlobalStyle from '../Styles/TextStyle';
-import SQLite from 'react-native-sqlite-storage';
-
-import {useSelector, useDispatch} from 'react-redux';
-import {setName, setPassword} from '../Redux/actions';
-import { createStackNavigator } from 'react-navigation-stack';
-
-const db = SQLite.openDatabase(
-    {
-        name: 'MainDB',
-        location: 'default',
-    },
-    () => { },
-    error => { console.log(error) }
-);
-
-export default function InfoScreen({ navigation, route }) {
-
-    const {name,password} = useSelector(state=>state.userReducer);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        getData();
-    }, []);
-
-    const getData = () => {
-        try {
-            db.transaction((tx) => {
-                tx.executeSql(
-                    "SELECT Name, Password FROM Users",
-                    [],
-                    (tx, results) => {
-                        var len = results.rows.length;
-                        if (len > 0) {
-                            var userName = results.rows.item(0).Name;
-                            var userPassword = results.rows.item(0).Password;
-                            dispatch(setName(userName));
-                            dispatch(setName(userPassword));
-                        }
-                    }
-                )
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    // const updateData = async () => {
-    //     if (name.length == 0) {
-    //         Alert.alert('Warning!', 'Please write your data.')
-    //     } else {
-    //         try {
-    //             db.transaction((tx) => {
-    //                 tx.executeSql(
-    //                     "UPDATE Users SET Name=?",
-    //                     [name],
-    //                     () => { Alert.alert('Success!', 'Your data has been updated.') },
-    //                     error => { console.log(error) }
-    //                 )
-    //             })
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-    // }
-
-    const removeData = async () => {
-        try {
-            // await AsyncStorage.clear();
-            db.transaction((tx) => {
-                tx.executeSql(
-                    "DELETE FROM Users",
-                    [],
-                    () => { navigation.navigate('Login') },
-                    error => { console.log(error) }
-                )
-            })
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    return (
-        <View style={styles.body}>
-            <Text style={[
-                styles.text
-            ]}>
-                Welcome Dear {name} !
-            </Text>
-            <Text style={[
-                styles.text
-            ]}>
-                Your Password is {password}
-            </Text>
-            
-            {/* <TextInput
-                style={styles.input}
-                placeholder='Enter your name'
-                value={name}
-                onChangeText={(value) => dispatch(setName(name))}
-            />
-            <CustomButton
-                title='Update'
-                color='#ff7f00'
-                onPressFunction={updateData}
-            /> */}
-            <CustomButton
-                title='Logout'
-                color='#f40100'
-                //onPressFunction={navigation.navigate('Settings')}
-            />
-        </View>
-    )
-}
+import React, { Component } from 'react'
+import { View, Text, StyleSheet, TextInput, Button, Alert } from 'react-native'
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 1,
-        alignItems: 'center',
+    bigBlack: {
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 19,
+        backgroundColor: '#EFEFF4',
+        alignItems: "center" ,
+        justifyContent: "center",
     },
-    text: {
-        fontSize: 20,
-        margin: 10,
+    smallBlack: {
+        color: 'black',
+        fontSize: 15,
+        backgroundColor: '#EFEFF4',
+        alignItems: "center" ,
+        justifyContent: "center",
+    },
+    red: {
+        color: 'red',
+    },
+    logo: {
+        resizeMode: "cover",
+        width: 130,
+        height: 130,
+        margin: 20,
     },
     input: {
-        width: 300,
-        borderWidth: 1,
-        borderColor: '#555',
-        borderRadius: 10,
-        backgroundColor: '#ffffff',
-        textAlign: 'center',
+        width: 170,
+        height: 35,
+        backgroundColor: '#83cfe3',
+        margin: 10,
+        padding: 8,
+        color: 'white',
+        borderRadius: 14,
+        fontSize: 18,
+        fontWeight: '500',
+        alignItems: "center" ,
+        justifyContent: "center",
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    text: {
+        fontWeight: 'bold',
+        fontSize: 22,
+        margin: 10,
+        
+    },
+    text2: {
         fontSize: 20,
-        marginTop: 130,
-        marginBottom: 10,
-    }
-})
+        margin: 10,
+        
+    },
+    text3: {
+        fontSize: 11,
+        margin: 10,
+        
+    },
+});
 
- 
+
+class SurveyScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: '',appliance:'', wattage:'', num:'', freq:'',
+         }
+    }
+
+    onChangeText = (key, val) => {
+        this.setState({ [key]: val })
+    }
+   
+   componentDidMount = () => {
+        fetch("http://127.0.0.1:5000/verify", {method: "POST",
+            body: "uname=Lee", 
+            header: {
+                'Content-Type': 'application/json'
+              } // <-- Post parameters        
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+           console.log(responseJson);
+           this.setState({
+              data: responseJson
+           })
+        })
+        .catch((error) => {
+           console.error(error);
+        });
+   }
+
+    Refresh = async () => {
+        fetch("http://127.0.0.1:5000/verify", {method: "POST",
+        body: "uname=Lee", 
+        header: {
+            'Content-Type': 'application/json'
+            } // <-- Post parameters        
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+        console.log(responseJson);
+            this.setState({
+                data: responseJson
+            })
+        })
+        .catch((error) => {
+            console.error(error);
+        
+        
+        });
+    }
+
+    CheckAppliance = async () => {
+        fetch("http://127.0.0.1:5000/checkAPP", {method: "POST",
+        body: "uname=Lee", 
+        header: {
+            'Content-Type': 'application/json'
+            } // <-- Post parameters        
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            console.log(responseJson);
+            Alert.alert("Inputted: ", responseJson.data);
+        })
+        .catch((error) => {
+            console.error(error);
+            Alert.alert("Inputted: ", responseJson.data);
+        
+        });
+    }
+
+
+
+    AddAppliance = async () => {
+        //const { username, password, family, reset_Q, reset_A, confirm_password } = this.state
+
+        info = "app="+this.state.appliance+"&wattage="+this.state.wattage+"&num="+this.state.num+"&freq="+this.state.freq;
+        console.log(info);
+
+        fetch("http://127.0.0.1:5000/addAPP", {method: "POST",
+            body: info, 
+            header: {
+                'Content-Type': 'application/json'
+            } // <-- Post parameters        
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+        console.log(responseJson);
+        //    this.setState({
+        //       data: responseJson
+        //    })
+            verification = responseJson.valid;
+
+            if (verification == "True")
+            {
+                this.setState({appliance:'', wattage:'', num:'', freq:'',});
+                Alert.alert("Success");
+            }
+            else
+            {
+                Alert.alert("Invalid Input");
+            }
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+    }
+
+    ConfirmAppliance = async () => {
+        //const { username, password, family, reset_Q, reset_A, confirm_password } = this.state
+
+        info = "confirm";
+        console.log(info);
+
+        fetch("http://127.0.0.1:5000/confirmAPP", {method: "POST",
+            body: info, 
+            header: {
+                'Content-Type': 'application/json'
+            } // <-- Post parameters        
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+        console.log(responseJson);
+        //    this.setState({
+        //       data: responseJson
+        //    })
+            verification = responseJson.valid;
+
+            if (verification == "True")
+            {
+
+                Alert.alert("Successfully added all appliances! Please refresh to check.");
+            }
+            else
+            {
+                Alert.alert("Invalid Input");
+            }
+        })
+        .catch((error) => {
+        console.error(error);
+        });
+    }
+   render() {
+      return (
+         <View style={{justifyContent: "center", alignItems: "center", flex: 1}}>
+            <Text style={styles.bigBlack}>
+               User name: {this.state.data.name}, UID: {this.state.data.id}
+            </Text>
+            <Text style={styles.bigBlack}>
+               Your appliance information:
+            </Text>
+            <Text style={styles.smallBlack}>
+               {this.state.data.appliance}
+            </Text>
+            <Text style={styles.smallBlack}>
+               Your last data update time: {this.state.data.lastupdate}
+            </Text>
+            <Text style={styles.smallBlack}>
+               Your last data login time: {this.state.data.lastlogin}
+            </Text>
+            <Text style={styles.text}>
+               Update Your Appliance Information
+            </Text>
+            <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder='Appliance Name'
+                    autoCapitalize="none"
+                    placeholderTextColor='white'
+                    onChangeText={val => this.onChangeText('appliance', val)}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder='Wattage'
+                    autoCapitalize="none"
+                    placeholderTextColor='white'
+                    onChangeText={val => this.onChangeText('wattage', val)}
+                />
+            </View>
+            <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder='Number'
+                    autoCapitalize="none"
+                    placeholderTextColor='white'
+                    onChangeText={val => this.onChangeText('num', val)}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder='Freq'
+                    autoCapitalize="none"
+                    placeholderTextColor='white'
+                    onChangeText={val => this.onChangeText('freq', val)}
+                />
+            </View>
+            <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+                <Button
+                    title='Add Appliance'
+                    onPress={this.AddAppliance}
+                />
+
+                <Button
+                    title='Check my input'
+                    onPress={this.CheckAppliance}
+                />
+
+
+            </View>
+            <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+
+                <Button
+                    title='Confirm All'
+                    onPress={this.ConfirmAppliance}
+                />
+
+                <Button
+                    title='Refresh'
+                    onPress={this.Refresh}
+                />
+
+                <Button
+                    title='Home'
+                    onPress={() => {this.props.navigation.navigate('NestedSettings') }}
+                />
+            </View>
+
+         </View>
+      )
+   }
+}
+
+export default SurveyScreen

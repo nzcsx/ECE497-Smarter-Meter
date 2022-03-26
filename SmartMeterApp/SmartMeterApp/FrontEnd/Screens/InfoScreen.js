@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Button } from 'react-native'
 
 const styles = StyleSheet.create({
   bigBlack: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 
-class HttpExample extends Component {
+class InfoScreen extends Component {
    state = {
       data: ''
    }
@@ -63,8 +63,12 @@ class HttpExample extends Component {
             <Text style={styles.smallBlack}>
                Your last data login time: {this.state.data.lastlogin}
             </Text>
+            <Button
+                    title='Home'
+                    onPress={() => {this.props.navigation.navigate('NestedSettings') }}
+                />
          </View>
       )
    }
 }
-export default HttpExample
+export default InfoScreen

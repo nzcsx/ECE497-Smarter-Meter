@@ -1,316 +1,205 @@
-import React, { useEffect, useRef, useState } from 'react';
-// import * as React from 'react'
+import React from 'react'
 import {
     PanResponder,
     Dimensions,
-    Text,
     TouchableOpacity,
     View,
     TextInput,
   StyleSheet,
   ScrollView,
   Button,
-  Image
+  Image,
+  Text
+  
 } from 'react-native';
-import { AreaChart, XAxis, YAxis } from 'react-native-svg-charts';
-import {
-    Circle,
-    Defs,
-    G,
-    Line,
-    LinearGradient,
-    Path,
-    Rect,
-    Stop,
-    Text as SvgText,
-} from 'react-native-svg';
-import * as shape from 'd3-shape';
+import * as shape from 'd3-shape'
+import { Grid, LineChart, XAxis, YAxis } from 'react-native-svg-charts'
 
-export default TemporalScreen;
+class TemporalScreen extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
 
-function TemporalScreen({ navigation }) {
-    const apx = (size = 0) => {
-        let width = Dimensions.get('window').width;
-        return (width / 750) * size;
-    };
+        data:[15, 25, 35, 45, 55],
+        dates: [1, 2, 3, 4, 5],
+        colors:['#600080', '#9900cc', '#c61aff', '#d966ff', '#ecb3ff'],
+        }
+    }
 
-    const [dateList, setDateList] = useState([
-        '08-31 15:09',
-        '08-31 15:10',
-        '08-31 15:11',
-        '08-31 15:12',
-        '08-31 15:13',
-    ]);
-    const [priceList, setPriceList] = useState([
-        47022.9649875,
-        47097.6349875,
-        47132.3149875,
-        47137.6449875,
-        47164.9949875,
-    ]);
-    const size = useRef(dateList.length);
+    onChangeText = (key, val) => {
+        this.setState({ [key]: val })
+    }
 
-    const [positionX, setPositionX] = useState(-1);// The currently selected X coordinate position
+    GetReport = async () => {
+        //const { username, password, family, reset_Q, reset_A, confirm_password } = this.state
 
-    const panResponder = useRef(
-        PanResponder.create({
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-            onPanResponderTerminationRequest: (evt, gestureState) => true,
+        info = "date1="+this.state.start_date+"&date2="+this.state.end_date;
+        console.log(info);
 
-            onPanResponderGrant: (evt, gestureState) => {
-                updatePosition(evt.nativeEvent.locationX);
-                return true;
-            },
-            onPanResponderMove: (evt, gestureState) => {
-                updatePosition(evt.nativeEvent.locationX);
-                return true;
-            },
-            onPanResponderRelease: () => {
-                setPositionX(-1);
-            },
+        fetch("http://127.0.0.1:5000/temporal", {method: "POST",
+            body: info, 
+            header: {
+                'Content-Type': 'application/json'
+              } // <-- Post parameters        
         })
-    );
+        .then((response) => response.json())
+        .then((responseJson) => {
+           console.log(responseJson);
+        //    this.setState({
+        //       data: responseJson
+        //    })
+            verification = responseJson.report;
+            this.setState({data: responseJson.readings, dates: responseJson.dates});
 
-    const updatePosition = (x) => {
-        const YAxisWidth = apx(130);
-        const x0 = apx(0);// x0 position
-        const chartWidth = apx(750) - YAxisWidth - x0;
-        const xN = x0 + chartWidth;//xN position
-        const xDistance = chartWidth / size.current;// The width of each coordinate point
-        if (x <= x0) {
-            x = x0;
-        }
-        if (x >= xN) {
-            x = xN;
-        }
+            
 
-        // console.log((x - x0) )
+        })
+        .catch((error) => {
+           console.error(error);
+        });
+    }
 
-        // The selected coordinate x :
-        // (x - x0)/ xDistance = value
-        let value = ((x - x0) / xDistance).toFixed(0);
-        if (value >= size.current - 1) {
-            value = size.current - 1; // Out of chart range, automatic correction
-        }
+    render() {
 
-        setPositionX(Number(value));
-    };
 
-    const CustomGrid = ({ x, y, ticks }) => (
-        <G>
-            {
-                // Horizontal grid
-                ticks.map((tick) => (
-                    <Line
-                        key={tick}
-                        x1="0%"
-                        x2="100%"
-                        y1={y(tick)}
-                        y2={y(tick)}
-                        stroke="#EEF3F6"
-                    />
-                ))
-            }
-            {
-                // Vertical grid
-                priceList.map((_, index) => (
-                    <Line
-                        key={index.toString()}
-                        y1="0%"
-                        y2="100%"
-                        x1={x(index)}
-                        x2={x(index)}
-                        stroke="#EEF3F6"
-                    />
-                ))
-            }
-        </G>
-    );
+        /**
+         * Both below functions should preferably be their own React Components
+         */
+         const axesSvg = { fontSize: 10, fill: 'grey' };
+         const verticalContentInset = { top: 10, bottom: 10 }
+         const xAxisHeight = 30
 
-    const CustomLine = ({ line }) => (
-        <Path
-            key="line"
-            d={line}
-            stroke="#FEBE18"
-            strokeWidth={apx(6)}
-            fill="none"
-        />
-    );
+        const HorizontalLine = (({ y }) => (
+            <Line
+                key={ 'zero-axis' }
+                x1={ '0%' }
+                x2={ '100%' }
+                y1={ y(50) }
+                y2={ y(50) }
+                stroke={ 'grey' }
+                strokeDasharray={ [ 4, 8 ] }
+                strokeWidth={ 2 }
+            />
+        ))
 
-    const CustomGradient = () => (
-        <Defs key="gradient">
-            <LinearGradient id="gradient" x1="0" y="0%" x2="0%" y2="100%">
-                {/* <Stop offset="0%" stopColor="rgb(134, 65, 244)" /> */}
-                {/* <Stop offset="100%" stopColor="rgb(66, 194, 244)" /> */}
-
-                <Stop offset="0%" stopColor="#FEBE18" stopOpacity={0.25} />
-                <Stop offset="100%" stopColor="#FEBE18" stopOpacity={0} />
-            </LinearGradient>
-        </Defs>
-    );
-
-    const Tooltip = ({ x, y, ticks }) => {
-        if (positionX < 0) {
-            return null;
-        }
-
-        const date = dateList[positionX];
-
-        return (
-            <G x={x(positionX)} key="tooltip">
-                <G
-                    x={positionX > size.current / 2 ? -apx(300 + 10) : apx(10)}
-                    y={y(priceList[positionX]) - apx(10)}>
+        const Tooltip = ({ x, y }) => (
+            <G
+                x={ x(5) - (75 / 2) }
+                key={ 'tooltip' }
+                onPress={ () => console.log('tooltip clicked') }
+            >
+                <G y={ 50 }>
                     <Rect
-                        y={-apx(24 + 24 + 20) / 2}
-                        rx={apx(12)} // borderRadius
-                        ry={apx(12)} // borderRadius
-                        width={apx(300)}
-                        height={apx(96)}
-                        stroke="rgba(254, 190, 24, 0.27)"
-                        fill="rgba(255, 255, 255, 0.8)"
+                        height={ 40 }
+                        width={ 75 }
+                        stroke={ 'grey' }
+                        fill={ 'white' }
+                        ry={ 10 }
+                        rx={ 10 }
                     />
-
-                    <SvgText x={apx(20)} fill="#617485" opacity={0.65} fontSize={apx(24)}>
-                        {date}
-                    </SvgText>
-                    <SvgText
-                        x={apx(20)}
-                        y={apx(24 + 20)}
-                        fontSize={apx(24)}
-                        fontWeight="bold"
-                        fill="rgba(224, 188, 136, 1)">
-                        ${priceList[positionX]}
-                    </SvgText>
+                    <Text
+                        x={ 75 / 2 }
+                        dy={ 20 }
+                        alignmentBaseline={ 'middle' }
+                        textAnchor={ 'middle' }
+                        stroke={ 'rgb(134, 65, 244)' }
+                    >
+                        { `${this.state.data[5]}ºC` }
+                    </Text>
                 </G>
-
-                <G x={x}>
+                <G x={ 75 / 2 }>
                     <Line
-                        y1={ticks[0]}
-                        y2={ticks[Number(ticks.length)]}
-                        stroke="#FEBE18"
-                        strokeWidth={apx(4)}
-                        strokeDasharray={[6, 3]}
+                        y1={ 50 + 40 }
+                        y2={ y(this.state.data[ 5 ]) }
+                        stroke={ 'grey' }
+                        strokeWidth={ 2 }
                     />
-
                     <Circle
-                        cy={y(priceList[positionX])}
-                        r={apx(20 / 2)}
-                        stroke="#fff"
-                        strokeWidth={apx(2)}
-                        fill="#FEBE18"
+                        cy={ y(this.state.data[ 5 ]) }
+                        r={ 6 }
+                        stroke={ 'rgb(134, 65, 244)' }
+                        strokeWidth={ 2 }
+                        fill={ 'white' }
                     />
                 </G>
             </G>
-        );
-    };
+        )
 
-    const verticalContentInset = { top: apx(40), bottom: apx(40) };
+        return (
 
-    return (
-        <View
-            style={{
-                backgroundColor: '#fff',
-                alignItems: 'stretch',
-            }}>
-            <View
-                style={{
-                    flexDirection: 'row',
-                    width: apx(750),
-                    height: apx(570),
-                    alignSelf: 'stretch',
-                }}>
-                
-                <View style={{ flex: 1 }} {...panResponder.current.panHandlers}>
-                    <AreaChart
-                        style={{ flex: 1 }}
-                        data={priceList}
-                        // curve={shape.curveNatural}
-                        curve={shape.curveMonotoneX}
-                        contentInset={{ ...verticalContentInset }}
-                        svg={{ fill: 'url(#gradient)' }}>
-                        <CustomLine />
-                        <CustomGrid />
-                        <CustomGradient />
-                        <Tooltip />
-                    </AreaChart>
+            <View style={{ justifyContent: 'center', flex: 1 }}>
+            
+            <View style={{ height: 200, padding: 20, flexDirection: 'row' }}>
+            <YAxis
+                data={this.state.data}
+                style={{ marginBottom: xAxisHeight }}
+                contentInset={verticalContentInset}
+                svg={axesSvg}
+            />
+            <View style={{ flex: 1, marginLeft: 10 }}>
+                <LineChart
+                    style={{ flex: 1 }}
+                    data={this.state.data}
+                    contentInset={verticalContentInset}
+                    svg={{ stroke: 'rgb(134, 65, 244)' }}
+                >
+                    <Grid/>
+                </LineChart>
+                <XAxis
+                    style={{ marginHorizontal: -10, height: xAxisHeight }}
+                    data={this.state.data}
+                    formatLabel={(value, index) => index}
+                    contentInset={{ left: 10, right: 10 }}
+                    svg={axesSvg}
+                />
+            </View>
+            
+
+            </View>
+            <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+                    <Text style={[styles.text2]}>
+                            From: 
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Start Date (YYYY-MM-DD)'
+                        autoCapitalize="none"
+                        placeholderTextColor='white'
+                        onChangeText={val => this.onChangeText('start_date', val)}
+                    />
                 </View>
 
-                <YAxis
-                    style={{ width: apx(130) }}
-                    data={priceList}
-                    contentInset={verticalContentInset}
-                    svg={{ fontSize: apx(20), fill: '#617485' }}
-                />
-                
-            </View>
-            <XAxis
-                style={{
-                    alignSelf: 'stretch',
-                    // marginTop: apx(57),
-                    width: apx(750),
-                    height: apx(60),
-                }}
-                numberOfTicks={7}
-                data={priceList}
-                formatLabel={(value, index) => dateList[value]}
-                contentInset={{
-                    left: apx(36),
-                    right: apx(130),
-                }}
-                svg={{
-                    fontSize: apx(20),
-                    fill: '#617485',
-                    y: apx(20),
-                    // originY: 30,
-                }}
-            />
-            <View style={{ flexDirection:"row" }}>
-                <Text style={[styles.text2]}>
-                        From: 
-                </Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Start Date (YYYY-MM-DD)'
-                    autoCapitalize="none"
-                    placeholderTextColor='white'
-                    onChangeText={val => this.onChangeText('start_date', val)}
-                />
-            </View>
+                <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+                    <Text style={[styles.text2]}>
+                            To  :   
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='End Date (YYYY-MM-DD)'
+                        autoCapitalize="none"
+                        placeholderTextColor='white'
+                        onChangeText={val => this.onChangeText('end_date', val)}
+                    />
+                </View>
 
-            <View style={{ flexDirection:"row" }}>
-                <Text style={[styles.text2]}>
-                        To  :   
-                </Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder='End Date (YYYY-MM-DD)'
-                    autoCapitalize="none"
-                    placeholderTextColor='white'
-                    onChangeText={val => this.onChangeText('end_date', val)}
-                />
-            </View>
+                <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
+                    <Button
+                    title='Get Report'
+                    onPress={this.GetReport}
+                    />
 
-            <View style={{ flexDirection:"row", position: 'relative', height: 50, alignItems: 'center', justifyContent: 'center', }}>
-                <Button
-                title='Get Report'
-                //onPress={GetReport}
-                />
+                    <Button
+                    title='Home'
+                    onPress={() => {this.props.navigation.navigate('NestedReport') }}
+                    />
+                </View>
 
-                <Button
-                title='Home'
-                onPress={() => {navigation.navigate('NestedReport') }}
-                />
-            </View>
-
-
-            
         </View>
-        
-    );
+            
+            
+        )
+    }
+
 }
 
 const styles = StyleSheet.create({
@@ -323,7 +212,7 @@ const styles = StyleSheet.create({
     input: {
         width: 240,
         height: 35,
-        backgroundColor: '#FEBE18',
+        backgroundColor: '#83cfe3',
         margin: 10,
         padding: 8,
         color: 'white',
@@ -352,3 +241,5 @@ const styles = StyleSheet.create({
         
     },
 })
+
+export default TemporalScreen
