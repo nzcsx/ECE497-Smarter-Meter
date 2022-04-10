@@ -20,9 +20,9 @@ gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
 
-#GPIO.setmode(GPIO.BCM)
-#GPIO.setwarnings(False)
-#GPIO.setup(18,GPIO.OUT)
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(18,GPIO.OUT)
 
 # count #files
     #path, dirs, files = next(os.walk(dir_local))
@@ -35,13 +35,13 @@ while flag:
     for i in range(max_num_pics):
         sleep(time_interval)
         filename_local = time.strftime('%Y_%m_%d-%H_%M_%S') + '.jpg'
-        #GPIO.output(18,GPIO.HIGH)
+        GPIO.output(18,GPIO.HIGH)
         camera.capture(os.path.join(dir_local, filename_local))
-        #GPIO.output(18,GPIO.LOW)
+        GPIO.output(18,GPIO.LOW)
         
     # upload these photo to google drive
-    filenames_local = os.listdir(dir_local)
-    for filename_local in filenames_local:
+    #filenames_local = os.listdir(dir_local)
+    #for filename_local in filenames_local:
         file_drive = drive.CreateFile({'parents': [{'id': dir_drive}]})
         file_drive['title'] = filename_local
         file_drive.SetContentFile(os.path.join(dir_local, filename_local))
