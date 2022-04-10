@@ -1,0 +1,66 @@
+------------ Your Report of Electricity Consumption ------------
+     From Dec-20-2021 00:00:00 To Jan-10-2022 23:59:59
+
+------------ Power consumption Recorded ------------
+Date: Dec-29-2021 17:13:24  has a record of 123 KWh.
+Date: Dec-31-2021 17:45:24  has a record of 125 KWh.
+Date: Jan-01-2022 19:13:24  has a record of 190 KWh.
+Date: Jan-03-2022 07:13:24  has a record of 217 KWh.
+Date: Jan-10-2022 12:13:24  has a record of 293 KWh.
+-> In a total of 283 hours used 170.0 kWh.
+-> Maximum power difference of 76 KWh between Jan-03-2022 07:13:24
+and Jan-10-2022 12:13:24
+
+------------ Spatial Allocation of consumption ------------
+Household Appliance fridge has been used for approximately 283.0 hours. Estimated to consume  169.8 kWh
+Household Appliance laptop has been used for approximately 141.6 hours. Estimated to consume  0.014 kWh
+Household Appliance lamp has been used for approximately 259.7 hours. Estimated to consume  0.052 kWh
+Household Appliance oven has been used for approximately 133.9 hours. Estimated to consume  0.134 kWh
+-> The order of consumption in appliance is: fridge > oven > lamp > laptop 
+-> Please pay attention to these appliances which potentially overuse power: fridge
+-> Appliance fridgehas a frequency of all day while itself consumes more than 500 watts, please consider to unplug it regularly if possible
+-> Try not overfill your fridge, since overfilling impedes the flow of cold air, resulting in wasted electricity.
+-> Fluorescent bulbs and LED bulbs last longer and use less electricity than incandescent bulbsand consider turn off unnecessary lights regularly.
+
+------------ Your Bill Estimation ------------
+Date: Dec-29-2021 has an estimated total payment of 0.037
+which composes of $ 0.012 on peak, $ 0.017 off peak and $ 0.008 mid peak
+Date: Dec-30-2021 has an estimated total payment of 0.111
+which composes of $ 0.042 on peak, $ 0.041 off peak and $ 0.028 mid peak
+Date: Dec-31-2021 has an estimated total payment of 2.029
+which composes of $ 0.576 on peak, $ 1.07 off peak and $ 0.383 mid peak
+Date: Jan-01-2022 has an estimated total payment of 6.296
+which composes of $ 2.703 on peak, $ 1.796 off peak and $ 1.797 mid peak
+Date: Jan-02-2022 has an estimated total payment of 7.944
+which composes of $ 7.944 off peak
+Date: Jan-03-2022 has an estimated total payment of 1.376
+which composes of $ 0.46 on peak, $ 0.611 off peak and $ 0.305 mid peak
+Date: Jan-04-2022 has an estimated total payment of 1.178
+which composes of $ 0.448 on peak, $ 0.432 off peak and $ 0.298 mid peak
+Date: Jan-05-2022 has an estimated total payment of 1.178
+which composes of $ 0.448 on peak, $ 0.432 off peak and $ 0.298 mid peak
+Date: Jan-06-2022 has an estimated total payment of 1.178
+which composes of $ 0.448 on peak, $ 0.432 off peak and $ 0.298 mid peak
+Date: Jan-07-2022 has an estimated total payment of 1.178
+which composes of $ 0.448 on peak, $ 0.432 off peak and $ 0.298 mid peak
+Date: Jan-08-2022 has an estimated total payment of 1.178
+which composes of $ 0.448 on peak, $ 0.432 off peak and $ 0.298 mid peak
+Date: Jan-09-2022 has an estimated total payment of 0.865
+which composes of $ 0.865 off peak
+Date: Jan-10-2022 has an estimated total payment of 0.75
+which composes of $ 0.299 on peak, $ 0.252 off peak and $ 0.199 mid peak
+Date: Jan-11-2022 has an estimated total payment of 0.75
+which composes of $ 0.299 on peak, $ 0.252 off peak and $ 0.199 mid peak
+                       IN TOTAL
+-> 0.183 kWh on peak, 0.039 kWh off peak, 0.039 kWh mid peak,
+-> $ 15.008 on peak, $ 6.631 off peak, $ 4.409 mid peak,
+-> Bill Payment = $ 26.048
+-> Your period of use rank is: 'on peak' > 'off peak' > 'mid peak' 
+-> You have spent the most power on peak, please try to do more housework at off/mid peak hours
+
+------------ Some useful hints ------------
+The time-of-use periods are divided by:
+Winter: Nov 1 - Apr 30 and Summer: May 1 - Oct 31
+In summer: Off-peak: 7 pm to 7 am, on-peak: 11 am to 5 pm, mid-peak: the rest of the time
+In winter: Off-peak: 7 pm to 7 am, mid-peak: 11 am to 5 pm, on-peak: the rest of the time
+Regardless of season: weekends or statuatory holidays - all off-peak

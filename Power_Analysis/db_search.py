@@ -9,7 +9,7 @@ def print_collection(collection):
         pprint.pprint(doc)
 
 # Print the information of a specific user
-def print_user_info(collection, usr_id):
+def print_user_info(db, collection, usr_id):
     if collection.count_documents({'_id': usr_id}) == 0:
         print("Unable to find the specified user")
         return -1
@@ -20,8 +20,48 @@ def print_user_info(collection, usr_id):
     res_p = res["readings"]
     for key in res_p:
         print("Reading at time:",datetime.strptime(res["datetime"][key], "%b-%d-%Y %H:%M:%S"),
-              " with reading: ",res_p[key], "W")
-    print("Appliance information:",res["appliance"])
+              " with reading: ",res_p[key], "kWh")
+    print("Appliance information:",)
+    print_appliance_info(db, collection, usr_id)
+
+# get all the appliance infomation in the database
+def search_appliance_list(db, collection, usr_id):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+    res = collection.find_one({'_id': usr_id})
+    app_collection = db[res["appliance"]]
+
+    ret = []
+    for doc in app_collection.find():
+        curr = [doc["appliance"], float(doc["wattage"]), int(doc["quantity"]), doc["usage_freq"]]
+        ret.append(curr)
+
+    return ret
+
+# Print the information of a specific user
+def print_appliance_info(db, collection, usr_id):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+    app_collection = db[res["appliance"]]
+
+    for doc in app_collection.find():
+        print(doc["quantity"], "appliance of name", doc["appliance"],"working at",doc["wattage"],
+              "Watts", "|Using frequency", doc["usage_freq"])
+
+# Return the family size of a specific user
+def search_family_info(collection, usr_id):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+    f_size = res['family_size']
+
+    return f_size
 
 # Look for all power meter readings in the database
 def search_power_reading_all(collection, usr_id):
@@ -116,3 +156,15 @@ def search_last_update(collection, usr_id, return_string = True):
         return res["datetime"][max_key]
     else:
         return datetime.strptime(res["datetime"][max_key], "%b-%d-%Y %H:%M:%S")
+
+def search_last_login(collection, usr_id, return_string = True):
+    if collection.count_documents({'_id': usr_id}) == 0:
+        print("Unable to find the specified user")
+        return -1
+
+    res = collection.find_one({'_id': usr_id})
+
+    if return_string:
+        return res["last_login_date"]
+    else:
+        return datetime.strptime(res["last_login_date"], "%b-%d-%Y %H:%M:%S")

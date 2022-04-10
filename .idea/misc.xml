@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/Power_Analysis/reports/TestResults___main__.TestBillPayment_2022-03-17_00-20-58.html" />
+    <file url="file://$PROJECT_DIR$/Power_Analysis/reports/TestResults___main__.TestDatabase_2022-03-17_00-20-58.html" />
+    <file url="file://$PROJECT_DIR$/Power_Analysis/reports/TestResults___main__.TestPowerAnalysis_2022-03-17_00-20-58.html" />
+    <file url="file://$PROJECT_DIR$/Power_Analysis/reports/TestResults___main__.TestSpatialAnalysis_2022-03-17_00-20-58.html" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8 (capstone_code)" project-jdk-type="Python SDK" />
 </project>
